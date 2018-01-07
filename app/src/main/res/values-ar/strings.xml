@@ -1,0 +1,66 @@
+<resources>
+
+    <!--<string name="app_name">Azan</string>-->
+    <string name="app_name">أذان</string>
+
+    <string name="label_fajr">الفجر</string>
+    <string name="label_dhuhr">الظهر</string>
+    <string name="label_asr">العصر</string>
+    <string name="label_maghrib">المغرب</string>
+    <string name="label_ishaa">العشاء</string>
+    <string name="label_shurooq">الشروق</string>
+
+    <string name="test_remaining_time">"باقى  5 دقائق"</string>
+
+    <string name="no_connection_message">يلزم أتصالك بالنت</string>
+    <string name="retry_label">أعد المحاولة</string>
+
+    <string name="please_wait_message">يتم تحميل البيانات من النت نرجو الأنتظار دقيقة أو دقيقتين على الأكثر</string>
+    <string name="reach_to_max_message">وصلت للحد الأقصى ...</string>
+    <string name="reach_to_min_message">وصلت للحد الأدنى...</string>
+    <string name="error_no_permission_granted_message">أذن أستخدام موقعك غير ممنوح، لا يمكنك تشغيل التطبيق</string>
+
+    <string name="action_settings">إعدادات</string>
+    <string name="label_settings">إعدادات</string>
+    <string name="action_reloading_data">إعادة تحميل البيانات</string>
+
+    <!-- preferences string resources -->
+    <string name="pref_azan_audio_label">صوت الأذان</string>
+    <string name="pref_azan_audio_key" translatable="false">listen-option</string>
+
+    <string name="pref_audio_label_full_azan">الأذان كامل</string>
+    <string name="pref_audio_full_azan" translatable="false">audio-full-azan</string>
+
+    <string name="pref_audio_label_takbeer">تكبيـر</string>
+    <string name="pref_audio_takbeer" translatable="false">audio-takbeer</string>
+
+    <string name="pref_audio_label_none">عدم سماع شىء</string>
+    <string name="pref_audio_none" translatable="false">no-audio</string>
+
+    <string name="location_problem_title">مشكلة فى تحديد موقعك</string>
+    <string name="location_problem_message">لا توجد بيانات مخزنة عن موقعك فى جهازك فمن فضلك تأكد من تفعيل خاصية تتبع موقعك فى جهازك ثم قم بفتح التطبيق بعد عدة ساعات، نأسف لحدوث هذا</string>
+
+
+    <!-- for Azan Calculation Method preference -->
+    <string name="pref_calc_method_label">طريقة حساب الصلوات</string>
+    <string name="pref_calc_method_key" translatable="false">calc-method</string>
+
+    <string name="pref_calc_method_label_umm_al_qura">أم القرى</string>
+    <string name="pref_calc_method_umm_al_qura" translatable="false">umm-al-qura</string>
+
+    <string name="pref_calc_method_label_egyptian_general_authority">الهيئة المصرية العامة للمساحة</string>
+    <string name="pref_calc_method_egyptian_general_authority" translatable="false">egyptian-general-authority</string>
+
+    <string name="pref_calc_method_label_kuwait">كويت</string>
+    <string name="pref_calc_method_kuwait" translatable="false">kuwait</string>
+
+    <string name="pref_calc_method_label_mwl">رابطة العالم الإسلامى</string>
+    <string name="pref_calc_method_mwl" translatable="false">muslim-world-league</string>
+
+    <string name="pref_calc_method_label_isna">الجمعية الإسلامية بأمريكا الشمالية</string>
+    <string name="pref_calc_method_isna" translatable="false">islam-society-north-america</string>
+
+    <string name="pref_calc_method_label_islamic_university_karachi">الجامعة الإسلامية بكراتشي</string>
+    <string name="pref_calc_method_islamic_university_karachi" translatable="false">islamic-university-karachi</string>
+
+</resources>

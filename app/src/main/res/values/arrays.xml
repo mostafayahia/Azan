@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="azan_audio_options">
+        <item>@string/pref_audio_label_full_azan</item>
+        <item>@string/pref_audio_label_takbeer</item>
+        <item>@string/pref_audio_label_none</item>
+    </string-array>
+
+    <string-array name="azan_audio_values">
+        <item>@string/pref_audio_full_azan</item>
+        <item>@string/pref_audio_takbeer</item>
+        <item>@string/pref_audio_none</item>
+    </string-array>
+
+    <string-array name="azan_calc_method_options">
+        <item>@string/pref_calc_method_label_umm_al_qura</item>
+        <item>@string/pref_calc_method_label_egyptian_general_authority</item>
+        <item>@string/pref_calc_method_label_kuwait</item>
+        <item>@string/pref_calc_method_label_mwl</item>
+        <item>@string/pref_calc_method_label_islamic_university_karachi</item>
+        <item>@string/pref_calc_method_label_isna</item>
+    </string-array>
+
+    <string-array name="azan_calc_method_values">
+        <item>@string/pref_calc_method_umm_al_qura</item>
+        <item>@string/pref_calc_method_egyptian_general_authority</item>
+        <item>@string/pref_calc_method_kuwait</item>
+        <item>@string/pref_calc_method_mwl</item>
+        <item>@string/pref_calc_method_islamic_university_karachi</item>
+        <item>@string/pref_calc_method_isna</item>
+    </string-array>
+
+</resources>

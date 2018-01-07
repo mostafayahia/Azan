@@ -1,0 +1,5 @@
+<resources>
+    <style name="azanTimeLayoutStyle" parent="@style/azanTimeLayoutPrimaryStyle">
+        <item name="android:layoutDirection">locale</item>
+    </style>
+</resources>

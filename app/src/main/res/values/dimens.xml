@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="azan_time_text_view_size">132dp</dimen>
+
+    <!-- date_text_view_size is roughly double the size of azan_time_text_view -->
+    <dimen name="date_text_view_size">208dp</dimen>
+
+</resources>
