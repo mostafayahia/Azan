@@ -12,6 +12,8 @@
 
     <string name="test_remaining_time">"باقى  5 دقائق"</string>
 
+    <string name="test_time">03:00</string>
+
     <string name="no_connection_message">يلزم أتصالك بالنت</string>
     <string name="retry_label">أعد المحاولة</string>
 
@@ -26,16 +28,16 @@
 
     <!-- preferences string resources -->
     <string name="pref_azan_audio_label">صوت الأذان</string>
-    <string name="pref_azan_audio_key" translatable="false">listen-option</string>
+
 
     <string name="pref_audio_label_full_azan">الأذان كامل</string>
-    <string name="pref_audio_full_azan" translatable="false">audio-full-azan</string>
+
 
     <string name="pref_audio_label_takbeer">تكبيـر</string>
-    <string name="pref_audio_takbeer" translatable="false">audio-takbeer</string>
+
 
     <string name="pref_audio_label_none">عدم سماع شىء</string>
-    <string name="pref_audio_none" translatable="false">no-audio</string>
+
 
     <string name="location_problem_title">مشكلة فى تحديد موقعك</string>
     <string name="location_problem_message">لا توجد بيانات مخزنة عن موقعك فى جهازك فمن فضلك تأكد من تفعيل خاصية تتبع موقعك فى جهازك ثم قم بفتح التطبيق بعد عدة ساعات، نأسف لحدوث هذا</string>
@@ -43,24 +45,24 @@
 
     <!-- for Azan Calculation Method preference -->
     <string name="pref_calc_method_label">طريقة حساب الصلوات</string>
-    <string name="pref_calc_method_key" translatable="false">calc-method</string>
+
 
     <string name="pref_calc_method_label_umm_al_qura">أم القرى</string>
-    <string name="pref_calc_method_umm_al_qura" translatable="false">umm-al-qura</string>
+
 
     <string name="pref_calc_method_label_egyptian_general_authority">الهيئة المصرية العامة للمساحة</string>
-    <string name="pref_calc_method_egyptian_general_authority" translatable="false">egyptian-general-authority</string>
+
 
     <string name="pref_calc_method_label_kuwait">كويت</string>
-    <string name="pref_calc_method_kuwait" translatable="false">kuwait</string>
+
 
     <string name="pref_calc_method_label_mwl">رابطة العالم الإسلامى</string>
-    <string name="pref_calc_method_mwl" translatable="false">muslim-world-league</string>
+
 
     <string name="pref_calc_method_label_isna">الجمعية الإسلامية بأمريكا الشمالية</string>
-    <string name="pref_calc_method_isna" translatable="false">islam-society-north-america</string>
+
 
     <string name="pref_calc_method_label_islamic_university_karachi">الجامعة الإسلامية بكراتشي</string>
-    <string name="pref_calc_method_islamic_university_karachi" translatable="false">islamic-university-karachi</string>
+
 
 </resources>

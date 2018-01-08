@@ -40,8 +40,6 @@ public class ScheduleAlarmTask {
 
         long timeInMillis = AzanAppTimeUtils.convertDateToMillis(dateString, hourIn24Format, minute);
 
-        Log.d(LOG_TAG, timeInMillis + "");
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 0,
                 new Intent(context, ScheduledReceiver.class),
@@ -49,6 +47,7 @@ public class ScheduleAlarmTask {
 
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pendingIntent);
         final int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             am.setExactAndAllowWhileIdle(ALARM_TYPE, timeInMillis, pendingIntent);

@@ -122,7 +122,7 @@ public class PreferenceUtils {
     public static void setAzanCalcMethodInPreferences(Context context, String methodString) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(context.getString(R.string.pref_calc_method_key), methodString);
-        editor.commit();
+        editor.apply();
     }
 
 }

@@ -26,8 +26,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -130,6 +133,17 @@ public class HelperUtils {
             return true;
         } catch (ActivityNotFoundException e) {
             return false;
+        }
+    }
+
+    public static void changeDirectionOfLinearLayout(LinearLayout linearLayout) {
+        ArrayList<View> views = new ArrayList<View>();
+        for(int x = 0; x < linearLayout.getChildCount(); x++) {
+            views.add(linearLayout.getChildAt(x));
+        }
+        linearLayout.removeAllViews();
+        for(int x = views.size() - 1; x >= 0; x--) {
+            linearLayout.addView(views.get(x));
         }
     }
 }

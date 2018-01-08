@@ -36,6 +36,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private FusedLocationProviderClient mFusedLocationClient;
 
+    private static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
+
+
+    private static final boolean DEBUG = false;
+
 
     /*
      these variables are very important it's used in many classes and all arrays related to
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public static final int INDEX_MAGHRIB = 4;
     public static final int INDEX_ISHAA = 5;
 
-    private static final int STORING_TOTAL_DAYS_NUM = 10;
+    private static final int STORING_TOTAL_DAYS_NUM = 90;
     private static final int MAX_DAYS_OFFSET_FOR_DISPLAY = 5;
 
     private String mCurrentDateDisplayed;
@@ -135,7 +141,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-
+        if (Build.VERSION.SDK_INT < 17 && Locale.getDefault().getLanguage().equals("ar")) {
+            for (View ll : mAllAzanTimesLayouts)
+                HelperUtils.changeDirectionOfLinearLayout((LinearLayout)ll);
+        }
 
 
         // setting mTodayDateString
@@ -251,7 +260,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         String[] allAzanTimesIn24Format =
                 PreferenceUtils.getAzanTimesIn24Format(this, maxDateStringForDisplay);
         if (allAzanTimesIn24Format == null) {
-            if (HelperUtils.isDeviceOnline(this)) fetchData();
+            if (HelperUtils.isDeviceOnline(this)) {
+                fetchData();
+            }
             else showErrorNoConnectionLayout();
         } else {
             setDateAndAzanTimesViews(mTodayDateString);
@@ -266,13 +277,19 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void fetchData() {
 
+
+//        if (DEBUG) {
+//            new FetchAzanTimes().execute(29.9187387, 31.2000924);
+//            return;
+//        }
+
         // Getting the location of the device
         boolean permissionGranted =
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (!permissionGranted) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // ask again
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 5);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_LOCATION_REQUEST_CODE);
                 return; // No point for continue
             }
         }
@@ -299,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 5:
+            case MY_PERMISSION_LOCATION_REQUEST_CODE:
                 if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     HelperUtils.showToast(this, R.string.error_no_permission_granted_message, Toast.LENGTH_LONG);
                     finish();
@@ -328,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         finish();
                     }
                 })
+                .setCancelable(false)
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
     }
@@ -382,8 +400,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String preferenceKey) {
         if (preferenceKey.equals(getString(R.string.pref_calc_method_key))) {
+
             if (sCalcMethodSetDefaultState) sCalcMethodSetDefaultState = false;
             else sCalcMethodPreferenceUpdated = true;
+
         }
     }
 
@@ -409,9 +429,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                     if (methodString.length() == 0) {
                         methodString = getDefaultCalcMethod(longitude, latitude);
-                        PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
                         sCalcMethodSetDefaultState = true;
-                        Log.d(LOG_TAG, "method string: " + methodString);
+                        PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
+
                     }
 
                     URL url = NetworkUtils.buildUrl(dateInSeconds, longitude, latitude, getAzanCalcMethodInt(methodString));
@@ -479,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         final String[] COUNTRIES_UMM_AL_QURA =
                 {"Saudi Arabia", "Yemen", "Jordan", "United Arab Emirates", "Qatar", "Bahrain"};
 
-        Log.d(LOG_TAG, "country: " + countryName);
+        //Log.d(LOG_TAG, "country: " + countryName);
         final String COUNTRY_KUWAIT = "Kuwait";
 
         for (String c : COUNTRIES_UMM_AL_QURA)
