@@ -1,5 +1,16 @@
 # Azan
 
+A simple app for playing Azan audio at praying time
+
+The application has options to alert you at azan  time by displaying an screen with audio (full azan or takbeer only) or without any audio. You can also change Azan calculation method via the settings of this app.
+
+
+the app is already published on the store: 
+
+    https://play.google.com/store/apps/details?id=free.elmasry.azan
+    
+
+
 ## LICENSE
 
 Copyright (C) 2018 Yahia H. El-Tayeb
