@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- we use this variable to customize our app, we may make the user change it and customize
+    this values in the app settings later
+     -->
+
     <bool name="use_24_hour_format">false</bool>
 
     <bool name="use_day_name_for_date">true</bool>

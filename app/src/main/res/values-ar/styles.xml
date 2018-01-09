@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+       when testing the app on Lollipop device 5.0 which its language is arabic the values for
+        android:gravity (start and end) didn't display correctly so we change these values
+    -->
     <style name="azanTimeStyle" parent="@style/azanTimePrimaryStyle">
         <item name="android:gravity">center_horizontal</item>
     </style>

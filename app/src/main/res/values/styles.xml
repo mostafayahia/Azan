@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--
+    we create azanTimePrimaryStyle because we want to override some default values using
+    different qualifier (like values-v17/styles or values-ar/styles
+    -->
     <style name="azanTimeStyle" parent="@style/azanTimePrimaryStyle"></style>
 
     <style name="azanTimePrimaryStyle">

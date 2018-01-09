@@ -41,18 +41,40 @@ public class HelperUtils {
 
     private static Toast mToast;
 
+    /**
+     * show toast message with short duration
+     * @param context the base context of the application
+     * @param text the message you want to display
+     */
     public static void showToast(Context context, String text) {
         showToast(context, text, Toast.LENGTH_SHORT);
     }
 
+    /**
+     * show toast message with short duration
+     * @param context the base context of the application
+     * @param stringResId the resId for the string you want to display
+     */
     public static void showToast(Context context, int stringResId) {
         showToast(context, context.getString(stringResId), Toast.LENGTH_SHORT);
     }
 
+    /**
+     * show toast message with a specific duration
+      * @param context the base context of the application
+     * @param stringResId the resId for the string you want to display
+     * @param duration can be Toast.LENGTH_SHORT or Toast.LENGTH_LONG
+     */
     public static void showToast(Context context, int stringResId, int duration) {
         showToast(context, context.getString(stringResId), duration);
     }
 
+    /**
+     * show toast message with a specific duration
+     * @param context the base context of the application
+     * @param text the message you want to display
+     * @param duration can be Toast.LENGTH_SHORT or Toast.LENGTH_LONG
+     */
     public static void showToast(Context context, String text, int duration) {
         if (mToast != null) {
             mToast.cancel();
@@ -88,12 +110,21 @@ public class HelperUtils {
                 context.getResources().getDisplayMetrics());
     }
 
+    /**
+     * determine the device is Lollipop version or not
+     * @return true of api level of the device is Lollipop
+     */
     public static boolean isLollipop() {
         int apiLevel = Build.VERSION.SDK_INT;
         return apiLevel == 21 || apiLevel == 22;
     }
 
 
+    /**
+     * determine if the location is enabled in the system settings of the device or not
+     * @param context the base context for the application
+     * @return true if the location is enabled in the system settings of the device
+     */
     public static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
         String locationProviders;
@@ -136,6 +167,10 @@ public class HelperUtils {
         }
     }
 
+    /**
+     * toggle the direction of the linear layout (from rtl to ltr and vice versa)
+     * @param linearLayout the linearLayout that you want to change its direction
+     */
     public static void changeDirectionOfLinearLayout(LinearLayout linearLayout) {
         ArrayList<View> views = new ArrayList<View>();
         for(int x = 0; x < linearLayout.getChildCount(); x++) {

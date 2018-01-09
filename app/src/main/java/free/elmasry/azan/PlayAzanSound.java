@@ -47,10 +47,10 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(this,
                 AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()));
 
-        TextView azanTimeLabelTextView = (TextView) findViewById(R.id.azan_time_label_textview);
+        TextView azanTimeLabelTextView = findViewById(R.id.azan_time_label_textview);
         azanTimeLabelTextView.setText(getAzanLabel(indexOfCurrentAzanTime));
 
-        TextView azanTimeTextView = (TextView) findViewById(R.id.azan_time_textview);
+        TextView azanTimeTextView = findViewById(R.id.azan_time_textview);
         String azanTimeIn24HourFormat = allAzanTimesIn24Format[indexOfCurrentAzanTime];
 
         if (getResources().getBoolean(R.bool.use_24_hour_format)) {
@@ -65,13 +65,18 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         } else if (azanAudioPreference.equals(getString(R.string.pref_audio_takbeer))) {
             mMediaPlayer = MediaPlayer.create(this, R.raw.takbeer);
         } else if (azanAudioPreference.equals(getString(R.string.pref_audio_none))) {
+            final int durationInMillis = 5000;
+            /*
+             * in this case we will display this activity with no sound for durationInMillis
+             * then we will close this activity
+             */
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     finish();
                 }
             };
-            new Handler().postDelayed(runnable, 5000);
+            new Handler().postDelayed(runnable, durationInMillis);
             return; // No need for continue
         } else {
             throw new RuntimeException("unknown azan audio preference: " + azanAudioPreference);

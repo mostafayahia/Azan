@@ -80,9 +80,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     /*
-     these variables are very important it's used in many classes and all arrays related to
-     azan times are built based on them
-      */
+     * these variables are very important it's used in many classes and all arrays related to
+     * azan times are built based on them. we assumed when writing the code for this app, any array
+     * contains these times it will order ascending according to the time
+     */
     public static final int ALL_TIMES_NUM = 6;
     public static final int INDEX_FAJR = 0;
     public static final int INDEX_SHUROOQ = 1;
@@ -115,12 +116,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // initialize mAllAzanTimesTextViews
         mAllAzanTimesTextViews = new TextView[ALL_TIMES_NUM];
-        mAllAzanTimesTextViews[INDEX_FAJR] = (TextView) findViewById(R.id.time_fajr_textview);
-        mAllAzanTimesTextViews[INDEX_SHUROOQ] = (TextView) findViewById(R.id.time_shurooq_textview);
-        mAllAzanTimesTextViews[INDEX_DHUHR] = (TextView) findViewById(R.id.time_dhuhr_textview);
-        mAllAzanTimesTextViews[INDEX_ASR] = (TextView) findViewById(R.id.time_asr_textview);
-        mAllAzanTimesTextViews[INDEX_MAGHRIB] = (TextView) findViewById(R.id.time_maghrib_textview);
-        mAllAzanTimesTextViews[INDEX_ISHAA] = (TextView) findViewById(R.id.time_ishaa_textview);
+        mAllAzanTimesTextViews[INDEX_FAJR] = findViewById(R.id.time_fajr_textview);
+        mAllAzanTimesTextViews[INDEX_SHUROOQ] = findViewById(R.id.time_shurooq_textview);
+        mAllAzanTimesTextViews[INDEX_DHUHR] = findViewById(R.id.time_dhuhr_textview);
+        mAllAzanTimesTextViews[INDEX_ASR] = findViewById(R.id.time_asr_textview);
+        mAllAzanTimesTextViews[INDEX_MAGHRIB] = findViewById(R.id.time_maghrib_textview);
+        mAllAzanTimesTextViews[INDEX_ISHAA] = findViewById(R.id.time_ishaa_textview);
 
         // initialize mAllAzanTimesLayouts
         mAllAzanTimesLayouts = new View[ALL_TIMES_NUM];
@@ -141,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
+        /*
+         * for the devices its api level less than 17 and its default language is arabic the
+         * direction for the layout doesn't change automatically to rtl and there is no way to
+          * do it by xml
+         */
         if (Build.VERSION.SDK_INT < 17 && Locale.getDefault().getLanguage().equals("ar")) {
             for (View ll : mAllAzanTimesLayouts)
                 HelperUtils.changeDirectionOfLinearLayout((LinearLayout)ll);
@@ -255,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             dateString = AzanAppTimeUtils.getDayAfterDateString(dateString);
         String maxDateStringForDisplay = dateString;
 
-        // we check against maxDateStringForDisplay, to make sure the doesn't crash when the user
+        // we check against maxDateStringForDisplay, to make sure the app doesn't crash when the user
         // increase the date by clicking increase day button
         String[] allAzanTimesIn24Format =
                 PreferenceUtils.getAzanTimesIn24Format(this, maxDateStringForDisplay);
@@ -283,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 //            return;
 //        }
 
-        // Getting the location of the device
         boolean permissionGranted =
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (!permissionGranted) {
@@ -294,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
         }
 
+
+         // get the location of the user then fetching the data from the internet
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -427,9 +434,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                     String methodString = PreferenceUtils.getAzanCalcMethodFromPreferences(MainActivity.this);
 
-                    if (methodString.length() == 0) {
+                    if (methodString == null || methodString.length() == 0) {
                         methodString = getDefaultCalcMethod(longitude, latitude);
                         sCalcMethodSetDefaultState = true;
+                        // Note the next line will cause calling to the function onSharedPreferenceChanged()
                         PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
 
                     }
@@ -460,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             try {
 
                 // storing all azan times for different days from jsonResponseArray into preferences
+                // file
                 for (int i = 0; i < STORING_TOTAL_DAYS_NUM; i++) {
 
                     String dateString = AzanAppTimeUtils.convertMillisToDateString(
@@ -478,7 +487,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 //                for (int i = 0; i < 5; i++) output += AladhanJsonUtils.getSimpleAzanDataFromJson(jsonResponseArray[i])+"\n\n";
 //                Log.d(LOG_TAG, output);
 
-                // getting all azan times for today
                 mTodayDateString =
                         AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
                 setDateAndAzanTimesViews(mTodayDateString);
@@ -491,6 +499,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
+    /**
+     * in the first time the user installs this app, we do our best to get the correct azan
+     * calculation method for his country
+     * @param longitude
+     * @param latitude
+     * @return the guessed Azan calculation method for the user
+     */
     private String getDefaultCalcMethod(double longitude, double latitude) {
 
         String countryName = new GetReverseGeoCoding(latitude, longitude).getCountry()
@@ -535,7 +550,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setAzanTimesViews(String[] allAzanTimesIn24Format) {
-        // setting azan times for xml text views
+
         for (int i = 0; i < ALL_TIMES_NUM; i++) {
             String azanTimeIn24HourFormat = allAzanTimesIn24Format[i];
 
@@ -548,14 +563,18 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
+    /**
+     * we highlight the next time for today
+     */
     private void highlightNextTimeView() {
 
-        String[] allAzanTimesIn24Format =
-                PreferenceUtils.getAzanTimesIn24Format(this, mTodayDateString);
-
-        // highlight the next azan time
         int indexOfCurrentTime = AzanAppTimeUtils.getIndexOfCurrentTime(this);
         if (indexOfCurrentTime == ALL_TIMES_NUM - 1) {
+            /*
+             * in this case we didn't highlight the azan of the next time until the time pass
+             * 12:00 AM for example if the current time is ISHAA, we will leave highlighted time
+             * is ISHAA until the time pass 12:00 AM
+             */
             mAllAzanTimesLayouts[ALL_TIMES_NUM - 1]
                     .setBackgroundResource(R.color.colorPrimaryLight);
         } else if (indexOfCurrentTime < 0) {
@@ -597,6 +616,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         findViewById(R.id.azan_main_layout).setVisibility(View.GONE);
     }
 
+    /**
+     * getting azan calculation method int that used in aladhan api
+     * @param methodString the calculation method that stored in the preference file
+     * @return azan calculation method int corresponding to a given method calculation
+     */
     private int getAzanCalcMethodInt(String methodString) {
 
         if (methodString.equals(getString(R.string.pref_calc_method_egyptian_general_authority)))

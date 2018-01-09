@@ -1,4 +1,7 @@
 <resources>
+    <!--
+    android:layoutDirection property doesn't exist before android v17
+    -->
     <style name="azanTimeLayoutStyle" parent="@style/azanTimeLayoutPrimaryStyle">
         <item name="android:layoutDirection">locale</item>
     </style>
