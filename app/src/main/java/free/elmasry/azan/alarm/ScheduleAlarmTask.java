@@ -36,6 +36,13 @@ public class ScheduleAlarmTask {
 
     private static final String LOG_TAG = ScheduleAlarmTask.class.getSimpleName();
 
+    /**
+     * Schedule alaram to start AzanSoundActivity
+     * @param context
+     * @param dateString in the format "02 Dec 2018" or "01 jan 2010"
+     * @param hourIn24Format
+     * @param minute
+     */
     public static void scheduleAlarmForStartingAzanSoundActivityAt(Context context, String dateString, int hourIn24Format, int minute) {
 
         long timeInMillis = AzanAppTimeUtils.convertDateToMillis(dateString, hourIn24Format, minute);
@@ -43,7 +50,7 @@ public class ScheduleAlarmTask {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 0,
                 new Intent(context, ScheduledReceiver.class),
-                0);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

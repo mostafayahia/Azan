@@ -36,7 +36,7 @@ public class GetReverseGeoCoding {
         init();
     }
 
-    public void init() {
+    private void init() {
         mAddress1 = "";
         mAddress2 = "";
         mCity = "";
@@ -49,43 +49,43 @@ public class GetReverseGeoCoding {
 
             JSONObject jsonObj = getJSONFromURL("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + mLatitude + ","
                     + mLongitude + "&sensor=true");
-            String Status = jsonObj.getString("status");
-            if (Status.equalsIgnoreCase("OK")) {
-                JSONArray Results = jsonObj.getJSONArray("results");
-                JSONObject zero = Results.getJSONObject(0);
-                JSONArray address_components = zero.getJSONArray("address_components");
+            String status = jsonObj.getString("status");
+            if (status.equalsIgnoreCase("OK")) {
+                JSONArray results = jsonObj.getJSONArray("results");
+                JSONObject zero = results.getJSONObject(0);
+                JSONArray addressComponents = zero.getJSONArray("address_components");
 
-                for (int i = 0; i < address_components.length(); i++) {
-                    JSONObject zero2 = address_components.getJSONObject(i);
-                    String long_name = zero2.getString("long_name");
-                    JSONArray mtypes = zero2.getJSONArray("types");
-                    String Type = mtypes.getString(0);
+                for (int i = 0; i < addressComponents.length(); i++) {
+                    JSONObject zero2 = addressComponents.getJSONObject(i);
+                    String longName = zero2.getString("long_name");
+                    JSONArray mTypes = zero2.getJSONArray("types");
+                    String type = mTypes.getString(0);
 
 
-                    if (TextUtils.isEmpty(long_name) == false || !long_name.equals(null) || long_name.length() > 0 || long_name != "") {
-                        if (Type.equalsIgnoreCase("street_number")) {
-                            mAddress1 = long_name + " ";
-                        } else if (Type.equalsIgnoreCase("route")) {
-                            mAddress1 = mAddress1 + long_name;
-                        } else if (Type.equalsIgnoreCase("sublocality")) {
-                            mAddress2 = long_name;
-                        } else if (Type.equalsIgnoreCase("locality")) {
-                            // mAddress2 = mAddress2 + long_name + ", ";
-                            mCity = long_name;
-                        } else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
-                            mCounty = long_name;
-                        } else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
-                            mState = long_name;
-                        } else if (Type.equalsIgnoreCase("country")) {
-                            mCountry = long_name;
-                        } else if (Type.equalsIgnoreCase("postal_code")) {
-                            mPIN = long_name;
+                    if (longName != null && !TextUtils.isEmpty(longName)) {
+                        if (type.equalsIgnoreCase("street_number")) {
+                            mAddress1 = longName + " ";
+                        } else if (type.equalsIgnoreCase("route")) {
+                            mAddress1 = mAddress1 + longName;
+                        } else if (type.equalsIgnoreCase("sublocality")) {
+                            mAddress2 = longName;
+                        } else if (type.equalsIgnoreCase("locality")) {
+                            // mAddress2 = mAddress2 + longName + ", ";
+                            mCity = longName;
+                        } else if (type.equalsIgnoreCase("administrative_area_level_2")) {
+                            mCounty = longName;
+                        } else if (type.equalsIgnoreCase("administrative_area_level_1")) {
+                            mState = longName;
+                        } else if (type.equalsIgnoreCase("country")) {
+                            mCountry = longName;
+                        } else if (type.equalsIgnoreCase("postal_code")) {
+                            mPIN = longName;
                         }
                     }
 
-                    // JSONArray mtypes = zero2.getJSONArray("types");
-                    // String Type = mtypes.getString(0);
-                    // Log.e(LOG_TAG,long_name);
+                    // JSONArray mTypes = zero2.getJSONArray("types");
+                    // String type = mTypes.getString(0);
+                    // Log.e(LOG_TAG,longName);
                 }
             }
 

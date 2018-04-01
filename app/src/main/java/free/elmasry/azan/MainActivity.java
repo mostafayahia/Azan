@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public static final int INDEX_ISHAA = 5;
 
     private static final int STORING_TOTAL_DAYS_NUM = 90;
-    private static final int MAX_DAYS_OFFSET_FOR_DISPLAY = 5;
+    private static final int MAX_DAYS_OFFSET_FOR_DISPLAY = 6;
 
     private String mCurrentDateDisplayed;
 
@@ -345,10 +345,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (HelperUtils.isLocationEnabled(MainActivity.this))
+                        if (HelperUtils.isLocationEnabled(MainActivity.this)) {
+                            // we will try to open google map app hopefully this makes the android
+                            // stores and caches the device location
                             HelperUtils.openApp(MainActivity.this, "com.google.android.apps.maps");
-                        else
+                        } else {
                             startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+                        }
                         finish();
                     }
                 })

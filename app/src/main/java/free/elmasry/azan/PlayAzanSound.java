@@ -61,7 +61,12 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
 
         String azanAudioPreference = PreferenceUtils.getAzanAudioFromPreferences(this);
         if (azanAudioPreference.equals(getString(R.string.pref_audio_full_azan))) {
-            mMediaPlayer = MediaPlayer.create(this, R.raw.full_azan_abd_el_baset_louder);
+            if (indexOfCurrentAzanTime == MainActivity.INDEX_FAJR) {
+                mMediaPlayer = MediaPlayer.create(this, R.raw.full_azan_fajr_abd_el_baset);
+            } else {
+                // we made the mp3 file sound louder using http://www.mp3louder.com/
+                mMediaPlayer = MediaPlayer.create(this, R.raw.full_azan_abd_el_baset);
+            }
         } else if (azanAudioPreference.equals(getString(R.string.pref_audio_takbeer))) {
             mMediaPlayer = MediaPlayer.create(this, R.raw.takbeer);
         } else if (azanAudioPreference.equals(getString(R.string.pref_audio_none))) {
