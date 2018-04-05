@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.utilities.AladhanJsonUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
-import free.elmasry.azan.utilities.GetReverseGeoCoding;
+import free.elmasry.azan.utilities.ReverseGeoCoding;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.NetworkUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
@@ -511,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      */
     private String getDefaultCalcMethod(double longitude, double latitude) {
 
-        String countryName = new GetReverseGeoCoding(latitude, longitude).getCountry()
+        String countryName = new ReverseGeoCoding(latitude, longitude).getCountry()
                 .trim().toLowerCase();
 
         final String[] COUNTRIES_UMM_AL_QURA =
