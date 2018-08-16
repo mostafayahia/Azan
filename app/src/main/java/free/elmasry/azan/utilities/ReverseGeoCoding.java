@@ -128,4 +128,5 @@ public class ReverseGeoCoding {
     public String getCounty() { return county; }
 
     public String getPIN() { return PIN; }
+
 }

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mAllAzanTimesLayouts[INDEX_ISHAA] = findViewById(R.id.time_ishaa_layout);
 
 
-        mDateTextView = (TextView) findViewById(R.id.date_textview);
+        mDateTextView = findViewById(R.id.date_textview);
 
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
             throw new RuntimeException("max days offset which the app can display can't be >= the total number of days stored by this app");
@@ -235,9 +235,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
 
         // if the application was onStop in Dhuhr time then become onStart in Asr time
-        if (mCurrentDateDisplayed != null && mCurrentDateDisplayed.equals(mTodayDateString)) {
+        if (mCurrentDateDisplayed != null) {
             unhighlightAllTimesViews();
-            highlightNextTimeView();
+            highlightNextTimeView(mCurrentDateDisplayed);
         }
 
         if (sCalcMethodPreferenceUpdated) {
@@ -486,9 +486,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 /* for testing and making sure the data we get from json is identical for what is
                  * displayed in the app
                  */
-//                String output = "";
-//                for (int i = 0; i < 5; i++) output += AladhanJsonUtils.getSimpleAzanDataFromJson(jsonResponseArray[i])+"\n\n";
-//                Log.d(LOG_TAG, output);
 
                 mTodayDateString =
                         AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
@@ -536,8 +533,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 PreferenceUtils.getAzanTimesIn24Format(this, dateString);
         setAzanTimesViews(allAzanTimesIn24Format);
 
-
-        if (mTodayDateString.equals(dateString)) highlightNextTimeView();
+        unhighlightAllTimesViews();
+        highlightNextTimeView(dateString);
 
         if (getResources().getBoolean(R.bool.use_day_name_for_date)) {
             String dayName = new SimpleDateFormat("E", Locale.getDefault())
@@ -567,12 +564,25 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     /**
-     * we highlight the next time for today
+     * we highlight the next time according to a give dateString
      */
-    private void highlightNextTimeView() {
+    private void highlightNextTimeView(String dateString) {
+        long dateInMillis = AzanAppTimeUtils.convertDateToMillis(dateString);
+        long todayInMillis = AzanAppTimeUtils.convertDateToMillis(mTodayDateString);
+        long tomorrowInMillis = todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS;
 
         int indexOfCurrentTime = AzanAppTimeUtils.getIndexOfCurrentTime(this);
-        if (indexOfCurrentTime == ALL_TIMES_NUM - 1) {
+
+        if (dateInMillis >= todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS * 2)
+            return; // no point for continue
+        if (dateInMillis == tomorrowInMillis && indexOfCurrentTime != ALL_TIMES_NUM - 1)
+            return; // no point for continue
+
+        if (dateInMillis == tomorrowInMillis && indexOfCurrentTime == ALL_TIMES_NUM - 1) {
+            // we want to highlight fajr in the next day (tomorrow) in case the current time is ishaa
+            mAllAzanTimesLayouts[0].setBackgroundResource(R.color.colorPrimaryLight);
+
+        } else if (indexOfCurrentTime == ALL_TIMES_NUM - 1) {
             /*
              * in this case we didn't highlight the azan of the next time until the time pass
              * 12:00 AM for example if the current time is ISHAA, we will leave highlighted time

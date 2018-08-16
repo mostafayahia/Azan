@@ -42,7 +42,7 @@
     <string name="pref_audio_none" translatable="false">no-audio</string>
 
     <string name="location_problem_title">Problem in finding your location</string>
-    <string name="location_problem_message">There is no data stored in your device about your location, please make sure activating tracking location option in your device, then open the app after several hours, thank you for your patient.</string>
+    <string name="location_problem_message">There is no data stored in your device about your location, please make sure activating tracking location option in your device, then open google map app to make your device determine your location and cache it then reopen this app, thank you for your patient.</string>
 
     <!-- for Azan Calculation Method preference -->
     <string name="pref_calc_method_label">Azan Calculation Method</string>
