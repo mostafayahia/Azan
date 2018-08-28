@@ -21,12 +21,22 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
+import free.elmasry.azan.shared.AzanTimeIndex;
+import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
+import free.elmasry.azan.widget.AzanWidgetService;
+
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ASR;
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_DHUHR;
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_FAJR;
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ISHAA;
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_MAGHRIB;
 
 public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -43,12 +53,17 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_azan_sound);
 
-        int indexOfCurrentAzanTime = AzanAppTimeUtils.getIndexOfCurrentTime(this);
+        int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(this);
         String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(this,
                 AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()));
 
+        if (!AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
+            Log.e(LOG_TAG, "NOT valid play azan time index: " + indexOfCurrentAzanTime);
+            throw new RuntimeException("NOT valid play azan time index: " + indexOfCurrentAzanTime);
+        }
+
         TextView azanTimeLabelTextView = findViewById(R.id.azan_time_label_textview);
-        azanTimeLabelTextView.setText(getAzanLabel(indexOfCurrentAzanTime));
+        azanTimeLabelTextView.setText(AzanAppHelperUtils.getAzanLabel(this, indexOfCurrentAzanTime));
 
         TextView azanTimeTextView = findViewById(R.id.azan_time_textview);
         String azanTimeIn24HourFormat = allAzanTimesIn24Format[indexOfCurrentAzanTime];
@@ -61,7 +76,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
 
         String azanAudioPreference = PreferenceUtils.getAzanAudioFromPreferences(this);
         if (azanAudioPreference.equals(getString(R.string.pref_audio_full_azan))) {
-            if (indexOfCurrentAzanTime == MainActivity.INDEX_FAJR) {
+            if (indexOfCurrentAzanTime == AzanTimeIndex.INDEX_FAJR) {
                 mMediaPlayer = MediaPlayer.create(this, R.raw.full_azan_fajr_abd_el_baset);
             } else {
                 // we made the mp3 file sound louder using http://www.mp3louder.com/
@@ -103,6 +118,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         }
 
         mMediaPlayer.start();
+
+        AzanWidgetService.startActionDisplayAzanTime(this);
     }
 
     @Override
@@ -131,31 +148,5 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         finish();
     }
 
-    private String getAzanLabel(int indexOfAzanTime) {
 
-        int resId;
-
-        switch (indexOfAzanTime) {
-            case MainActivity.INDEX_FAJR:
-                resId = R.string.label_fajr;
-                break;
-            case MainActivity.INDEX_DHUHR:
-                resId = R.string.label_dhuhr;
-                break;
-            case MainActivity.INDEX_ASR:
-                resId = R.string.label_asr;
-                break;
-            case MainActivity.INDEX_MAGHRIB:
-                resId = R.string.label_maghrib;
-                break;
-            case MainActivity.INDEX_ISHAA:
-                resId = R.string.label_ishaa;
-                break;
-            default:
-                throw new IllegalArgumentException("invalid index of azan time, the given parameter: " + indexOfAzanTime);
-        }
-
-        return getApplicationContext().getString(resId);
-
-    }
 }

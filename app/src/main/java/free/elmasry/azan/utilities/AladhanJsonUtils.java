@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import free.elmasry.azan.MainActivity;
+import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
 /**
  * Created by yahia on 12/22/17.
@@ -68,13 +69,13 @@ public class AladhanJsonUtils {
 
         JSONObject jsonTimings = getAladhanJsonTimingsObject(jsonDataObject);
 
-        String[] allAzanTimes = new String[MainActivity.ALL_TIMES_NUM];
-        allAzanTimes[MainActivity.INDEX_FAJR] = jsonTimings.getString(ALADHAN_FAJR);
-        allAzanTimes[MainActivity.INDEX_SHUROOQ] = jsonTimings.getString(ALADHAN_SHUROOQ);
-        allAzanTimes[MainActivity.INDEX_DHUHR] = jsonTimings.getString(ALADHAN_DHUHR);
-        allAzanTimes[MainActivity.INDEX_ASR] = jsonTimings.getString(ALADHAN_ASR);
-        allAzanTimes[MainActivity.INDEX_MAGHRIB] = jsonTimings.getString(ALADHAN_MAGHRIB);
-        allAzanTimes[MainActivity.INDEX_ISHAA] = jsonTimings.getString(ALADHAN_ISHAA);
+        String[] allAzanTimes = new String[ALL_TIMES_NUM];
+        allAzanTimes[INDEX_FAJR] = jsonTimings.getString(ALADHAN_FAJR);
+        allAzanTimes[INDEX_SHUROOQ] = jsonTimings.getString(ALADHAN_SHUROOQ);
+        allAzanTimes[INDEX_DHUHR] = jsonTimings.getString(ALADHAN_DHUHR);
+        allAzanTimes[INDEX_ASR] = jsonTimings.getString(ALADHAN_ASR);
+        allAzanTimes[INDEX_MAGHRIB] = jsonTimings.getString(ALADHAN_MAGHRIB);
+        allAzanTimes[INDEX_ISHAA] = jsonTimings.getString(ALADHAN_ISHAA);
 
         return allAzanTimes;
     }

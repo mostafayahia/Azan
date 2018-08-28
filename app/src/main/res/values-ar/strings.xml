@@ -26,6 +26,8 @@
     <string name="label_settings">إعدادات</string>
     <string name="action_reloading_data">إعادة تحميل البيانات</string>
 
+    <string name="widget_error">خطأ: أضعط هنا</string>
+
     <!-- preferences string resources -->
     <string name="pref_azan_audio_label">صوت الأذان</string>
 

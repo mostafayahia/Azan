@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/widget_azan_time_label_text_view"
+        style="@style/widgetTextViewStyle"
+        tools:text="Asr"
+         />
+
+    <TextView
+        android:id="@+id/widget_azan_time_text_view"
+        style="@style/widgetTextViewStyle"
+        tools:text="03:00"
+        />
+
+    <!-- NOTE: we make special layout for the widget in case of arabic language
+    because the design doesn't appear correctly in android api 17 -->
+
+</LinearLayout>

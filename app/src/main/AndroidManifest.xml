@@ -10,9 +10,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_mosque"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_mosque"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -24,8 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlayAzanSound"
-            android:excludeFromRecents="true"/>
+        <activity
+            android:name=".PlayAzanSound"
+            android:excludeFromRecents="true" />
 
         <receiver
             android:name=".alarm.ScheduledReceiver"
@@ -33,17 +34,29 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/label_settings">
+            android:label="@string/label_settings"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <receiver android:name=".alarm.BootBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".widget.AzanAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/azan_app_widget_info" />
+        </receiver>
+
+        <service android:name=".widget.AzanWidgetService" />
     </application>
 
 </manifest>

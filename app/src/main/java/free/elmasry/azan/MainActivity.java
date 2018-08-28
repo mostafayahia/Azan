@@ -55,11 +55,15 @@ import java.util.concurrent.TimeUnit;
 
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.utilities.AladhanJsonUtils;
+import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.ReverseGeoCoding;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.NetworkUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
+import free.elmasry.azan.widget.AzanWidgetService;
+
+import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -77,20 +81,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     private static final boolean DEBUG = false;
-
-
-    /*
-     * these variables are very important it's used in many classes and all arrays related to
-     * azan times are built based on them. we assumed when writing the code for this app, any array
-     * contains these times it will order ascending according to the time
-     */
-    public static final int ALL_TIMES_NUM = 6;
-    public static final int INDEX_FAJR = 0;
-    public static final int INDEX_SHUROOQ = 1;
-    public static final int INDEX_DHUHR = 2;
-    public static final int INDEX_ASR = 3;
-    public static final int INDEX_MAGHRIB = 4;
-    public static final int INDEX_ISHAA = 5;
 
     private static final int STORING_TOTAL_DAYS_NUM = 90;
     private static final int MAX_DAYS_OFFSET_FOR_DISPLAY = 6;
@@ -174,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
+
+        AzanWidgetService.startActionDisplayAzanTime(this);
 
     }
 
@@ -571,7 +563,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         long todayInMillis = AzanAppTimeUtils.convertDateToMillis(mTodayDateString);
         long tomorrowInMillis = todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS;
 
-        int indexOfCurrentTime = AzanAppTimeUtils.getIndexOfCurrentTime(this);
+        int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(this);
 
         if (dateInMillis >= todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS * 2)
             return; // no point for continue

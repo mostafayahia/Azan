@@ -22,11 +22,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
-import free.elmasry.azan.MainActivity;
+import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
+
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_FAJR;
+import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ISHAA;
 
 /**
  * Created by yahia on 12/31/17.
@@ -67,31 +69,27 @@ public class ScheduleAlarmTask {
 
     public static void scheduleTaskForNextAzanTime(Context context) {
 
-        int indexOfCurrentTime = AzanAppTimeUtils.getIndexOfCurrentTime(context);
+        int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
         String todayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
 
         int indexOfNextAzanTime;
         String[] allAzanTimesIn24Format;
         String dateString;
 
-        if (indexOfCurrentTime >= MainActivity.INDEX_ISHAA) {
+        if (indexOfCurrentTime >= INDEX_ISHAA) {
             String tomorrowDateString = AzanAppTimeUtils.getDayAfterDateString(todayDateString);
             allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context, tomorrowDateString);
-            indexOfNextAzanTime = MainActivity.INDEX_FAJR;
+            indexOfNextAzanTime = INDEX_FAJR;
             dateString = tomorrowDateString;
         } else {
-            if (indexOfCurrentTime < MainActivity.INDEX_FAJR)
-                indexOfNextAzanTime = MainActivity.INDEX_FAJR;
-            else if (indexOfCurrentTime == MainActivity.INDEX_FAJR)
-                indexOfNextAzanTime = MainActivity.INDEX_DHUHR; // not INDEX_SHUROOQ
+            if (indexOfCurrentTime < INDEX_FAJR)
+                indexOfNextAzanTime = INDEX_FAJR;
             else
                 indexOfNextAzanTime = indexOfCurrentTime + 1;
             allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context, todayDateString);
             dateString = todayDateString;
         }
 
-        if (!isValidAzanTimeIndex(indexOfNextAzanTime))
-            throw new RuntimeException("invalid azan time index: " + indexOfNextAzanTime);
 
         String hourAndMinuteIn24 = allAzanTimesIn24Format[indexOfNextAzanTime];
 
@@ -99,14 +97,5 @@ public class ScheduleAlarmTask {
         int minute = AzanAppTimeUtils.getMinuteFromTime(hourAndMinuteIn24);
 
         scheduleAlarmForStartingAzanSoundActivityAt(context, dateString, hourIn24Format, minute);
-    }
-
-
-    private static boolean isValidAzanTimeIndex(int azanTimeIndex) {
-        return azanTimeIndex == MainActivity.INDEX_FAJR ||
-                azanTimeIndex == MainActivity.INDEX_DHUHR ||
-                azanTimeIndex == MainActivity.INDEX_ASR ||
-                azanTimeIndex == MainActivity.INDEX_MAGHRIB ||
-                azanTimeIndex == MainActivity.INDEX_ISHAA;
     }
 }

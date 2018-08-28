@@ -22,7 +22,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import free.elmasry.azan.PlayAzanSound;
+import free.elmasry.azan.shared.AzanTimeIndex;
+import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.HelperUtils;
+import free.elmasry.azan.widget.AzanAppWidget;
+import free.elmasry.azan.widget.AzanWidgetService;
 
 /**
  * Created by yahia on 1/2/18.
@@ -31,8 +35,13 @@ import free.elmasry.azan.utilities.HelperUtils;
 public class ScheduledReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent startPlaySoundActivityIntent = new Intent(context, PlayAzanSound.class);
-        startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(startPlaySoundActivityIntent);
+        int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
+        if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
+            Intent startPlaySoundActivityIntent = new Intent(context, PlayAzanSound.class);
+            startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(startPlaySoundActivityIntent);
+        } else {
+            AzanWidgetService.startActionDisplayAzanTime(context);
+        }
     }
 }

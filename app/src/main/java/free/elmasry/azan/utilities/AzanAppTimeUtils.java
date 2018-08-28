@@ -96,39 +96,7 @@ public class AzanAppTimeUtils {
         return Integer.parseInt(hourAndMinute[1]);
     }
 
-    /**
-     * get time index of current time, example if we are at asr time, it will return INDEX_ASR
-     *
-     * @param context the base context of the application
-     * @return index of current time or -1 if the current time between midnight and first
-     * time
-     */
-    public static int getIndexOfCurrentTime(Context context) {
 
-        long nowInMillis = System.currentTimeMillis();
-
-        String todayString = convertMillisToDateString(nowInMillis);
-        String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context, todayString);
-
-        Timestamp timestamp = new Timestamp(nowInMillis);
-        DateFormat formatter = new SimpleDateFormat("HH:mm", new Locale("en"));
-        String nowHourAndMinuteIn24HourFormat = formatter.format(timestamp);
-        long nowHour = AzanAppTimeUtils.getHourFromTime(nowHourAndMinuteIn24HourFormat);
-        long nowMinute = AzanAppTimeUtils.getMinuteFromTime(nowHourAndMinuteIn24HourFormat);
-        for (int i = MainActivity.ALL_TIMES_NUM - 1; i >= 0; i--) {
-            String azanTime24HourFormat = allAzanTimesIn24Format[i];
-            long azanTimeHour = AzanAppTimeUtils.getHourFromTime(azanTime24HourFormat);
-            long azanTimeMinute = AzanAppTimeUtils.getMinuteFromTime(azanTime24HourFormat);
-            if (nowHour == azanTimeHour) {
-                if (nowMinute >= azanTimeMinute) {
-                    return i;
-                }
-            } else if (nowHour > azanTimeHour) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
 
     /**
