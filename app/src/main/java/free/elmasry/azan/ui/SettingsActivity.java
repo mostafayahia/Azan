@@ -15,10 +15,12 @@
  */
 
 
-package free.elmasry.azan;
+package free.elmasry.azan.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import free.elmasry.azan.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

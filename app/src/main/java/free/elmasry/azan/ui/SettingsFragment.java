@@ -15,7 +15,7 @@
  */
 
 
-package free.elmasry.azan;
+package free.elmasry.azan.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +25,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+
+import free.elmasry.azan.R;
 
 /**
  * Created by yahia on 1/3/18.

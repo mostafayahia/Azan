@@ -6,9 +6,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
-import free.elmasry.azan.MainActivity;
+import free.elmasry.azan.ui.MainActivity;
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.shared.AzanTimeIndex;

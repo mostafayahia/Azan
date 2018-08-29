@@ -66,8 +66,6 @@
 
     <string name="pref_calc_method_label_islamic_university_karachi">Islamic University In Karachi</string>
     <string name="pref_calc_method_islamic_university_karachi" translatable="false">islamic-university-karachi</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="widget_error">ERR: tab the widget</string>
 
 

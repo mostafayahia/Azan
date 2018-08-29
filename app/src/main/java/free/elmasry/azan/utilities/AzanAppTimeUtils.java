@@ -17,16 +17,10 @@
 package free.elmasry.azan.utilities;
 
 
-import android.content.Context;
-
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import free.elmasry.azan.MainActivity;
 
 /**
  * Created by yahia on 12/22/17.

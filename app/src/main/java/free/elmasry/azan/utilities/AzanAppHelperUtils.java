@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import free.elmasry.azan.MainActivity;
 import free.elmasry.azan.R;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;

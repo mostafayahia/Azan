@@ -15,7 +15,7 @@
  */
 
 
-package free.elmasry.azan;
+package free.elmasry.azan.ui;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.utilities.AladhanJsonUtils;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
@@ -165,8 +166,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
-        AzanWidgetService.startActionDisplayAzanTime(this);
-
     }
 
 
@@ -269,7 +268,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // for testing alarm at certain time
 //        ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(this, "2 jan 2018", 22, 27);
 
-        if (mCurrentDateDisplayed != null) ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+        if (mCurrentDateDisplayed != null) {
+            ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            AzanWidgetService.startActionDisplayAzanTime(this);
+        }
     }
 
 
@@ -482,7 +484,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 mTodayDateString =
                         AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
                 setDateAndAzanTimesViews(mTodayDateString);
+
                 ScheduleAlarmTask.scheduleTaskForNextAzanTime(MainActivity.this);
+                AzanWidgetService.startActionDisplayAzanTime(MainActivity.this);
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");

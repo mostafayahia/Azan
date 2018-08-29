@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package free.elmasry.azan;
+package free.elmasry.azan.ui;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.shared.AzanTimeIndex;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
@@ -31,12 +32,6 @@ import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
-
-import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ASR;
-import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_DHUHR;
-import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_FAJR;
-import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ISHAA;
-import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_MAGHRIB;
 
 public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -115,11 +110,10 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             mMediaPlayer.seekTo(position);
         } else {
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            AzanWidgetService.startActionDisplayAzanTime(this);
         }
 
         mMediaPlayer.start();
-
-        AzanWidgetService.startActionDisplayAzanTime(this);
     }
 
     @Override

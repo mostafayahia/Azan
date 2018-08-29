@@ -20,7 +20,6 @@ package free.elmasry.azan.utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import free.elmasry.azan.MainActivity;
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
 /**

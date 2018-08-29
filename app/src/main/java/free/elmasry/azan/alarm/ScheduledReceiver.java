@@ -21,11 +21,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import free.elmasry.azan.PlayAzanSound;
-import free.elmasry.azan.shared.AzanTimeIndex;
+import free.elmasry.azan.ui.PlayAzanSound;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
-import free.elmasry.azan.utilities.HelperUtils;
-import free.elmasry.azan.widget.AzanAppWidget;
 import free.elmasry.azan.widget.AzanWidgetService;
 
 /**

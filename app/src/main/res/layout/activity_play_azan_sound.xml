@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.elmasry.azan.PlayAzanSound">
+    tools:context="free.elmasry.azan.ui.PlayAzanSound">
 
     <TextView
         android:id="@+id/azan_time_label_textview"
