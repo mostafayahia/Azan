@@ -69,6 +69,11 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             azanTimeTextView.setText(AzanAppTimeUtils.convertTo12HourFormat(azanTimeIn24HourFormat));
         }
 
+        if (null == savedInstanceState) {
+            ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            AzanWidgetService.startActionDisplayAzanTime(this);
+        }
+
         String azanAudioPreference = PreferenceUtils.getAzanAudioFromPreferences(this);
         if (azanAudioPreference.equals(getString(R.string.pref_audio_full_azan))) {
             if (indexOfCurrentAzanTime == AzanTimeIndex.INDEX_FAJR) {
@@ -92,34 +97,31 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
                 }
             };
             new Handler().postDelayed(runnable, durationInMillis);
-            return; // No need for continue
         } else {
             throw new RuntimeException("unknown azan audio preference: " + azanAudioPreference);
         }
 
-        // if the device is lollipop we have to setWakeMode to PARTIAL_WAKE_LOCK otherwise
-        // the sound won't continue to the end (at least in case of playing full_azan_abd_el_baset)
-        if (HelperUtils.isLollipop())
-            mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+        if (mMediaPlayer != null) {
+            // if the device is lollipop we have to setWakeMode to PARTIAL_WAKE_LOCK otherwise
+            // the sound won't continue to the end (at least in case of playing full_azan_abd_el_baset)
+            if (HelperUtils.isLollipop())
+                mMediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
 
-        mMediaPlayer.setOnCompletionListener(this);
-        mMediaPlayer.setLooping(false);
+            mMediaPlayer.setOnCompletionListener(this);
+            mMediaPlayer.setLooping(false);
 
-        if (null != savedInstanceState && savedInstanceState.containsKey(AUDIO_POSITION_KEY)) {
-            int position = savedInstanceState.getInt(AUDIO_POSITION_KEY);
-            mMediaPlayer.seekTo(position);
-        } else {
-            ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
-            AzanWidgetService.startActionDisplayAzanTime(this);
+            if (null != savedInstanceState && savedInstanceState.containsKey(AUDIO_POSITION_KEY)) {
+                int position = savedInstanceState.getInt(AUDIO_POSITION_KEY);
+                mMediaPlayer.seekTo(position);
+            }
+
+            mMediaPlayer.start();
         }
-
-        mMediaPlayer.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
 
 
     }
