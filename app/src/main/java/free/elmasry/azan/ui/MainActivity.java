@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final boolean DEBUG = false;
 
-    private static final int STORING_TOTAL_DAYS_NUM = 90;
+    private static final int STORING_TOTAL_DAYS_NUM = 21;
     private static final int MAX_DAYS_OFFSET_FOR_DISPLAY = 6;
 
     private String mCurrentDateDisplayed;
@@ -460,6 +460,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         @Override
         protected void onPostExecute(String[] jsonResponseArray) {
 
+            if (jsonResponseArray == null) {
+                ((TextView) findViewById(R.id.downloading_wait_or_failed_text_view)).setText(R.string.failed_to_load_data);
+                return;
+            }
+
             hideDownloadingWaitLayout();
 
             try {
@@ -606,12 +611,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void showDownloadingWaitLayout() {
-        findViewById(R.id.downloading_wait_layout).setVisibility(View.VISIBLE);
+        findViewById(R.id.downloading_wait_or_failed_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.azan_main_layout).setVisibility(View.GONE);
     }
 
     private void hideDownloadingWaitLayout() {
-        findViewById(R.id.downloading_wait_layout).setVisibility(View.GONE);
+        findViewById(R.id.downloading_wait_or_failed_layout).setVisibility(View.GONE);
         findViewById(R.id.azan_main_layout).setVisibility(View.VISIBLE);
     }
 

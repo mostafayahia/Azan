@@ -27,6 +27,7 @@
     <string name="action_reloading_data">إعادة تحميل البيانات</string>
 
     <string name="widget_error">خطأ: أضعط هنا</string>
+    <string name="failed_to_load_data">نأسف لم نتمكن من تحميل البيانات من الإنترنت، يرجى إعادة المحاولة لاحقاً</string>
 
     <!-- preferences string resources -->
     <string name="pref_azan_audio_label">صوت الأذان</string>
