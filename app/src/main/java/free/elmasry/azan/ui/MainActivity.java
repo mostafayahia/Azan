@@ -17,7 +17,6 @@
 
 package free.elmasry.azan.ui;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +27,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,10 +37,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 
@@ -57,16 +51,19 @@ import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.utilities.AladhanJsonUtils;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
+import free.elmasry.azan.utilities.AzanAppLocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.ReverseGeoCoding;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.NetworkUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
+import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener, AzanAppLocationUtils.LocationSuccessHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -76,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private TextView[] mAllAzanTimesTextViews;
     private View[] mAllAzanTimesLayouts;
 
-    private FusedLocationProviderClient mFusedLocationClient;
-
-    private static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
+    public static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
 
 
     private static final boolean DEBUG = false;
@@ -94,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private static boolean sCalcMethodSetDefaultState = false;
 
     private static final String CURRENT_DATE_DISPLAYED_KEY = "current-date-displayed-key";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +123,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
             throw new RuntimeException("max days offset which the app can display can't be >= the total number of days stored by this app");
 
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         /*
@@ -279,37 +271,36 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
 //        if (DEBUG) {
-//            new FetchAzanTimes().execute(29.9187387, 31.2000924);
+//            double longitude = 29.9187387;
+//            double latitude = 31.2000924;
+//            MyLocation myLocation = new MyLocation();
+//            myLocation.setLongitude(longitude);
+//            myLocation.setLatitude(latitude);
+//            new FetchAzanTimes().execute(myLocation);
 //            return;
 //        }
 
-        boolean permissionGranted =
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (!permissionGranted) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // ask again
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_LOCATION_REQUEST_CODE);
-                return; // No point for continue
-            }
+        if (!AzanAppLocationUtils.locationPermissionGranted(this)) {
+            return; // No point for continue
         }
 
 
          // get the location of the user then fetching the data from the internet
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
+        AzanAppLocationUtils.processBasedOnLocation(this, this);
 
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-                            PreferenceUtils.clearAllAzanTimesStoredInPreferences(MainActivity.this);
-                            new FetchAzanTimes().execute(longitude, latitude);
-                        } else {
-                            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
-                        }
-                    }
-                });
+    }
+
+    @Override
+    public void onLocationSuccess(Location location) {
+        if (location != null) {
+            MyLocation myLocation = new MyLocation();
+            myLocation.setLatitude(location.getLatitude());
+            myLocation.setLongitude(location.getLongitude());
+            PreferenceUtils.clearAllAzanTimesStoredInPreferences(MainActivity.this);
+            new FetchAzanTimes().execute(myLocation);
+        } else {
+            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
+        }
     }
 
 
@@ -411,14 +402,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
-    private class FetchAzanTimes extends AsyncTask<Double, Void, String[]> {
+    private class FetchAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
 
         private long startTimeInMillis;
 
         @Override
-        protected String[] doInBackground(Double... params) {
-            double longitude = params[0];
-            double latitude = params[1];
+        protected String[] doInBackground(MyLocation... params) {
+            MyLocation myLocation = params[0];
+            double longitude = myLocation.getLongitude();
+            double latitude = myLocation.getLatitude();
 
             String[] jsonResponseArray = new String[STORING_TOTAL_DAYS_NUM];
 
