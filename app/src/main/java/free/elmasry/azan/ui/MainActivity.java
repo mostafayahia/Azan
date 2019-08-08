@@ -21,7 +21,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -118,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         mAllAzanTimesLayouts[INDEX_ISHAA] = findViewById(R.id.time_ishaa_layout);
 
 
+
         mDateTextView = findViewById(R.id.date_textview);
 
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             // for testing we can clear all data stored in the preferences
 //            PreferenceUtils.clearAllAzanTimesStoredInPreferences(this);
-
+            
             init();
         }
 
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_reloading_data:
                 if (HelperUtils.isDeviceOnline(this)) {
-                    fetchData();
+                    fetchData(true);
                 } else {
                     showErrorNoConnectionLayout();
                 }
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements
             sCalcMethodPreferenceUpdated = false;
             if (HelperUtils.isDeviceOnline(this)) {
                 PreferenceUtils.clearAllAzanTimesStoredInPreferences(this);
-                fetchData();
+                fetchData(false);
             } else {
                 showErrorNoConnectionLayout();
             }
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements
                 PreferenceUtils.getAzanTimesIn24Format(this, maxDateStringForDisplay);
         if (allAzanTimesIn24Format == null) {
             if (HelperUtils.isDeviceOnline(this)) {
-                fetchData();
+                fetchData(false);
             }
             else showErrorNoConnectionLayout();
         } else {
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void fetchData() {
+    private void fetchData(boolean reloadLocation) {
 
 
 //        if (DEBUG) {
@@ -284,19 +284,22 @@ public class MainActivity extends AppCompatActivity implements
             return; // No point for continue
         }
 
+        MyLocation myLocation = PreferenceUtils.getUserLocation(this);
 
-         // get the location of the user then fetching the data from the internet
-        AzanAppLocationUtils.processBasedOnLocation(this, this);
+        if (reloadLocation || myLocation == null || !myLocation.isDataNotNull()) {
+            // get the location of the user then fetching the data from the internet
+            AzanAppLocationUtils.processBasedOnLocation(this, this);
+        } else {
+            onLocationSuccess(myLocation);
+        }
 
     }
 
     @Override
-    public void onLocationSuccess(Location location) {
-        if (location != null) {
-            MyLocation myLocation = new MyLocation();
-            myLocation.setLatitude(location.getLatitude());
-            myLocation.setLongitude(location.getLongitude());
+    public void onLocationSuccess(MyLocation myLocation) {
+        if (myLocation != null && myLocation.isDataNotNull()) {
             PreferenceUtils.clearAllAzanTimesStoredInPreferences(MainActivity.this);
+            PreferenceUtils.setUserLocation(this, myLocation);
             new FetchAzanTimes().execute(myLocation);
         } else {
             showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
@@ -313,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements
                     HelperUtils.showToast(this, R.string.error_no_permission_granted_message, Toast.LENGTH_LONG);
                     finish();
                 } else {
-                    fetchData();
+                    fetchData(false);
                 }
 
         }
@@ -351,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements
             // you have to hide error_no_connection_layout before fetching the data from the internet
             // otherwise you will get a wrong display
             hideErrorNoConnectionLayout();
-            fetchData();
+            fetchData(false);
         }
     }
 

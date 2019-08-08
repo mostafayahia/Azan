@@ -20,8 +20,11 @@ package free.elmasry.azan.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import free.elmasry.azan.R;
+
+import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
 
 /**
  * Created by yahia on 12/25/17.
@@ -30,7 +33,8 @@ import free.elmasry.azan.R;
 public class PreferenceUtils {
 
     private static final String AZAN_TIME_SEPARATOR = "ZZZ";
-    private static final String AZAN_CALC_METHOD_KEY = "azan-calc-method-key";
+    private static final String AZAN_LOCATION_LONGITUDE_KEY = "azan-location-longitude-key";
+    private static final String AZAN_LOCATION_LATITUDE_KEY = "azan-location-latitude-key";
 
     /**
      * save in preference object azan times for a certain day
@@ -123,6 +127,28 @@ public class PreferenceUtils {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(context.getString(R.string.pref_calc_method_key), methodString);
         editor.apply();
+    }
+
+    public static void setUserLocation(Context context, MyLocation myLocation) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(AZAN_LOCATION_LONGITUDE_KEY, myLocation.getLongitude()+"");
+        editor.putString(AZAN_LOCATION_LATITUDE_KEY, myLocation.getLatitude()+"");
+        editor.apply();
+    }
+
+    public static MyLocation getUserLocation(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String longitudeText = sharedPreferences.getString(AZAN_LOCATION_LONGITUDE_KEY, "");
+        String latitudeText = sharedPreferences.getString(AZAN_LOCATION_LATITUDE_KEY, "");
+
+        MyLocation myLocation = new MyLocation();
+
+        if (!TextUtils.isEmpty(longitudeText) && !TextUtils.isEmpty(latitudeText)) {
+            myLocation.setLongitude(Double.valueOf(longitudeText));
+            myLocation.setLatitude(Double.valueOf(latitudeText));
+        }
+
+        return myLocation;
     }
 
 }

@@ -40,7 +40,10 @@ public class AzanAppLocationUtils {
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                locationSuccessHandler.onLocationSuccess(location);
+                MyLocation myLocation = new MyLocation();
+                myLocation.setLatitude(location.getLatitude());
+                myLocation.setLongitude(location.getLongitude());
+                locationSuccessHandler.onLocationSuccess(myLocation);
             }
         });
 
@@ -70,30 +73,35 @@ public class AzanAppLocationUtils {
      * callback for the process if retrieving location was successful
      */
     public interface LocationSuccessHandler {
-        void onLocationSuccess(Location location);
+        void onLocationSuccess(MyLocation myLocation);
     }
 
     /**
      * this class just wrapper for longitude and latitude
      */
     public static class MyLocation {
-        private double longitude;
-        private double latitude;
+        private Double longitude;
+        private Double latitude;
 
-        public void setLongitude(double longitude) {
+        public void setLongitude(Double longitude) {
             this.longitude = longitude;
         }
 
-        public void setLatitude(double latitude) {
+        public void setLatitude(Double latitude) {
             this.latitude = latitude;
         }
 
-        public double getLatitude() {
+        public Double getLatitude() {
             return latitude;
         }
 
-        public double getLongitude() {
+        public Double getLongitude() {
             return longitude;
         }
+
+        public boolean isDataNotNull() {
+            return latitude != null && longitude != null;
+        }
+
     }
 }
