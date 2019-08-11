@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             // for testing we can clear all data stored in the preferences
 //            PreferenceUtils.clearAllAzanTimesStoredInPreferences(this);
-            
+
             init();
         }
 
@@ -280,13 +280,13 @@ public class MainActivity extends AppCompatActivity implements
 //            return;
 //        }
 
-        if (!AzanAppLocationUtils.locationPermissionGranted(this)) {
-            return; // No point for continue
-        }
-
         MyLocation myLocation = PreferenceUtils.getUserLocation(this);
 
         if (reloadLocation || myLocation == null || !myLocation.isDataNotNull()) {
+            if (!AzanAppLocationUtils.locationPermissionGranted(this)) {
+                return; // No point for continue
+            }
+
             // get the location of the user then fetching the data from the internet
             AzanAppLocationUtils.processBasedOnLocation(this, this);
         } else {
