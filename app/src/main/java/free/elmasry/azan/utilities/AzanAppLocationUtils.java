@@ -22,14 +22,14 @@ public class AzanAppLocationUtils {
      * @return
      */
     public static void processBasedOnLocation(Activity activity,
-                                              final LocationSuccessHandler locationSuccessHandler) {
+                                              final LocationSuccessHandler locationSuccessHandler, int permissionRequestCode) {
         boolean permissionGranted =
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (!permissionGranted) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // ask again
                 activity.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MainActivity.MY_PERMISSION_LOCATION_REQUEST_CODE);
+                        permissionRequestCode);
                 return; // no point for continue
             }
         }
@@ -54,14 +54,14 @@ public class AzanAppLocationUtils {
      * @param activity
      * @return
      */
-    public static boolean locationPermissionGranted(Activity activity) {
+    public static boolean locationPermissionGranted(Activity activity, int permissionRequestCode) {
         boolean permissionGranted =
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (!permissionGranted) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // ask again
                 activity.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MainActivity.MY_PERMISSION_LOCATION_REQUEST_CODE);
+                        permissionRequestCode);
                 return false;
             }
         }

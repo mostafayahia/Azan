@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView[] mAllAzanTimesTextViews;
     private View[] mAllAzanTimesLayouts;
 
-    public static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
+    private static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
 
 
     private static final boolean DEBUG = false;
@@ -283,12 +283,12 @@ public class MainActivity extends AppCompatActivity implements
         MyLocation myLocation = PreferenceUtils.getUserLocation(this);
 
         if (reloadLocation || myLocation == null || !myLocation.isDataNotNull()) {
-            if (!AzanAppLocationUtils.locationPermissionGranted(this)) {
+            if (!AzanAppLocationUtils.locationPermissionGranted(this, MY_PERMISSION_LOCATION_REQUEST_CODE)) {
                 return; // No point for continue
             }
 
             // get the location of the user then fetching the data from the internet
-            AzanAppLocationUtils.processBasedOnLocation(this, this);
+            AzanAppLocationUtils.processBasedOnLocation(this, this, MY_PERMISSION_LOCATION_REQUEST_CODE);
         } else {
             onLocationSuccess(myLocation);
         }
