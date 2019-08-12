@@ -16,22 +16,32 @@
 
 package free.elmasry.azan.ui;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.shared.AzanTimeIndex;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
+import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
+
+import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
 
 public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -40,6 +50,13 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
     private static final String AUDIO_POSITION_KEY = "audio-position-key";
 
     private static final String LOG_TAG = PlayAzanSound.class.getSimpleName();
+
+    /**
+     * the number of extra days we fetch from azan api and will add them in shared preferences
+     */
+    private static final int FETCH_EXTRA_STORE_DAYS = 3;
+
+
 
 
     @Override
@@ -73,6 +90,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
             AzanWidgetService.startActionDisplayAzanTime(this);
         }
+
+        fetchExtraData();
 
         String azanAudioPreference = PreferenceUtils.getAzanAudioFromPreferences(this);
         if (azanAudioPreference.equals(getString(R.string.pref_audio_full_azan))) {
@@ -119,6 +138,47 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         }
     }
 
+    private void fetchExtraData() {
+        final int MAX_FETCH_DAYS = 70;
+        final int WAIT_DAYS_IF_REACH_MAX = 90;
+
+        /*
+         * if fetchExtraCounter > MAX_FETCH_DAYS we will wait WAIT_DAYS_IF_REACH_MAX days from last
+         * fetch date not fetching any data else we will fetch extra data as normal
+         * also maxNumber of fetching extra data is one time per day
+         */
+
+        if (HelperUtils.isDeviceOnline(this)) {
+            long nowInMillis = System.currentTimeMillis();
+            int fetchExtraCounter = PreferenceUtils.getFetchExtraCounter(this);
+            String lastDateTimeString = PreferenceUtils.getFetchExtraLastDateTimeString(this);
+            String lastDateString = AzanAppTimeUtils.getDateStringFromDateTimeString(lastDateTimeString);
+
+            Log.d(LOG_TAG, "Just BEFORE fetching any extra data");
+            Log.d(LOG_TAG, "fetchExtraCounter: " + fetchExtraCounter);
+            Log.d(LOG_TAG, "fetchExtraLastDateTimeString: " + lastDateTimeString);
+
+            if (lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
+                return; // No point for continue (Max: one fetch extra per day)
+            }
+
+            if (fetchExtraCounter > MAX_FETCH_DAYS && !TextUtils.isEmpty(lastDateString)) {
+                long lastDateInMillis = AzanAppTimeUtils.convertDateToMillis(lastDateString);
+                long waitDaysInMillis = WAIT_DAYS_IF_REACH_MAX * AzanAppTimeUtils.DAY_IN_MILLIS;
+                if (nowInMillis < lastDateInMillis + waitDaysInMillis) {
+                    return; // No point for continue
+                }
+            }
+
+            MyLocation myLocation = PreferenceUtils.getUserLocation(this);
+
+            if (myLocation != null && myLocation.isDataNotNull()) {
+                new FetchExtraAzanTimes().execute(myLocation);
+            }
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -144,5 +204,53 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         finish();
     }
 
+    private class FetchExtraAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
 
+        private long startTimeInMillis;
+
+
+        @Override
+        protected String[] doInBackground(MyLocation... myLocations) {
+            MyLocation myLocation = myLocations[0];
+
+            startTimeInMillis = System.currentTimeMillis();
+            try {
+                return FetchDataUtils.getJsonResponseArray(PlayAzanSound.this, myLocation,
+                        FETCH_EXTRA_STORE_DAYS, startTimeInMillis);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "error in getting json response from the url");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String[] jsonResponseArray) {
+            if (jsonResponseArray == null) {
+                Log.e(LOG_TAG, "jsonResponseArray for Azan Data is null");
+                return;
+            }
+
+            Context context = PlayAzanSound.this;
+
+            try {
+                FetchDataUtils.saveAzanAppDataInPreferences(context, jsonResponseArray,
+                        FETCH_EXTRA_STORE_DAYS, startTimeInMillis);
+
+                // update meta-data regarding to last extra fetch
+                long nowInMillis = System.currentTimeMillis();
+                String nowDateTimeString = AzanAppTimeUtils.convertMillisToDateTimeString(nowInMillis);
+                int extraFetchCounter = PreferenceUtils.getFetchExtraCounter(context);
+                PreferenceUtils.setFetchExtraCounter(context, ++extraFetchCounter);
+                PreferenceUtils.setFetchExtraLastDateTimeString(context, nowDateTimeString);
+
+                Log.d(LOG_TAG, "fetch extra data DONE successfully :)");
+                Log.d(LOG_TAG, "fetchExtraCounter: " + PreferenceUtils.getFetchExtraCounter(context));
+                Log.d(LOG_TAG, "fetchExtraLastDateTimeString: " + PreferenceUtils.getFetchExtraLastDateTimeString(context));
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "can't get data from the json response");
+                e.printStackTrace();
+            }
+        }
+    }
 }

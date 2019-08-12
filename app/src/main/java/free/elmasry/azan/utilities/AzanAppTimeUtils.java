@@ -17,6 +17,8 @@
 package free.elmasry.azan.utilities;
 
 
+import android.text.TextUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -192,6 +194,28 @@ public class AzanAppTimeUtils {
         long dateInMillis =
                 AzanAppTimeUtils.convertDateToMillis(dateString) - DAY_IN_MILLIS;
         return AzanAppTimeUtils.convertMillisToDateString(dateInMillis);
+    }
+
+    /**
+     * convert timeInMillis to date time string ex: 13 Jun 2018 13:10:22
+     * @param timeInMillis
+     * @return
+     */
+    public static String convertMillisToDateTimeString(long timeInMillis) {
+        return new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("en"))
+                .format(timeInMillis);
+    }
+
+    /**
+     * get date string like "13 Jun 2018" from date time string like that "13 Jun 2018 15:10:22"
+     * @param dateTimeString
+     * @return
+     */
+    public static String getDateStringFromDateTimeString(String dateTimeString) {
+        if (TextUtils.isEmpty(dateTimeString)) return "";
+
+        String[] array = dateTimeString.split(" +");
+        return array[0] + " " + array[1] + " " + array[2];
     }
 
 

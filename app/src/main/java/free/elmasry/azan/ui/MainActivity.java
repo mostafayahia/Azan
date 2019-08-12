@@ -17,18 +17,15 @@
 
 package free.elmasry.azan.ui;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,43 +37,37 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
-
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
-import free.elmasry.azan.utilities.AladhanJsonUtils;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
+import free.elmasry.azan.utilities.AzanAppLocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
-import free.elmasry.azan.utilities.ReverseGeoCoding;
+import free.elmasry.azan.utilities.AzanCalcMethodUtils;
+import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
-import free.elmasry.azan.utilities.NetworkUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
+import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener, AzanAppLocationUtils.LocationSuccessHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
-    TextView mDateTextView;
+    private TextView mDateTextView;
 
     private TextView[] mAllAzanTimesTextViews;
     private View[] mAllAzanTimesLayouts;
-
-    private FusedLocationProviderClient mFusedLocationClient;
 
     private static final int MY_PERMISSION_LOCATION_REQUEST_CODE = 305;
 
@@ -94,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private static boolean sCalcMethodSetDefaultState = false;
 
     private static final String CURRENT_DATE_DISPLAYED_KEY = "current-date-displayed-key";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,13 +114,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mAllAzanTimesLayouts[INDEX_ISHAA] = findViewById(R.id.time_ishaa_layout);
 
 
+
         mDateTextView = findViewById(R.id.date_textview);
 
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
             throw new RuntimeException("max days offset which the app can display can't be >= the total number of days stored by this app");
 
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         /*
@@ -196,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 return true;
             case R.id.action_reloading_data:
                 if (HelperUtils.isDeviceOnline(this)) {
-                    fetchData();
+                    fetchData(true);
                 } else {
                     showErrorNoConnectionLayout();
                 }
@@ -235,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             sCalcMethodPreferenceUpdated = false;
             if (HelperUtils.isDeviceOnline(this)) {
                 PreferenceUtils.clearAllAzanTimesStoredInPreferences(this);
-                fetchData();
+                fetchData(true);
             } else {
                 showErrorNoConnectionLayout();
             }
@@ -258,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 PreferenceUtils.getAzanTimesIn24Format(this, maxDateStringForDisplay);
         if (allAzanTimesIn24Format == null) {
             if (HelperUtils.isDeviceOnline(this)) {
-                fetchData();
+                fetchData(false);
             }
             else showErrorNoConnectionLayout();
         } else {
@@ -275,41 +264,43 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
 
-    private void fetchData() {
+    private void fetchData(boolean reloadLocation) {
 
 
 //        if (DEBUG) {
-//            new FetchAzanTimes().execute(29.9187387, 31.2000924);
+//            double longitude = 29.9187387;
+//            double latitude = 31.2000924;
+//            MyLocation myLocation = new MyLocation();
+//            myLocation.setLongitude(longitude);
+//            myLocation.setLatitude(latitude);
+//            new FetchAzanTimes().execute(myLocation);
 //            return;
 //        }
 
-        boolean permissionGranted =
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (!permissionGranted) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // ask again
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_LOCATION_REQUEST_CODE);
+        MyLocation myLocation = PreferenceUtils.getUserLocation(this);
+
+        if (reloadLocation || myLocation == null || !myLocation.isDataNotNull()) {
+            if (!AzanAppLocationUtils.locationPermissionGranted(this, MY_PERMISSION_LOCATION_REQUEST_CODE)) {
                 return; // No point for continue
             }
+
+            // get the location of the user then fetching the data from the internet
+            AzanAppLocationUtils.processBasedOnLocation(this, this, MY_PERMISSION_LOCATION_REQUEST_CODE);
+        } else {
+            onLocationSuccess(myLocation);
         }
 
+    }
 
-         // get the location of the user then fetching the data from the internet
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-                            PreferenceUtils.clearAllAzanTimesStoredInPreferences(MainActivity.this);
-                            new FetchAzanTimes().execute(longitude, latitude);
-                        } else {
-                            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
-                        }
-                    }
-                });
+    @Override
+    public void onLocationSuccess(MyLocation myLocation) {
+        if (myLocation != null && myLocation.isDataNotNull()) {
+            PreferenceUtils.clearAllAzanTimesStoredInPreferences(MainActivity.this);
+            PreferenceUtils.setUserLocation(this, myLocation);
+            new FetchAzanTimes().execute(myLocation);
+        } else {
+            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
+        }
     }
 
 
@@ -322,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     HelperUtils.showToast(this, R.string.error_no_permission_granted_message, Toast.LENGTH_LONG);
                     finish();
                 } else {
-                    fetchData();
+                    fetchData(false);
                 }
 
         }
@@ -360,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             // you have to hide error_no_connection_layout before fetching the data from the internet
             // otherwise you will get a wrong display
             hideErrorNoConnectionLayout();
-            fetchData();
+            fetchData(false);
         }
     }
 
@@ -411,43 +402,35 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
-    private class FetchAzanTimes extends AsyncTask<Double, Void, String[]> {
+    private class FetchAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
 
         private long startTimeInMillis;
 
         @Override
-        protected String[] doInBackground(Double... params) {
-            double longitude = params[0];
-            double latitude = params[1];
-
-            String[] jsonResponseArray = new String[STORING_TOTAL_DAYS_NUM];
+        protected String[] doInBackground(MyLocation... params) {
+            MyLocation myLocation = params[0];
 
             startTimeInMillis = System.currentTimeMillis();
 
-            for (int i = 0; i < STORING_TOTAL_DAYS_NUM; i++) {
-                try {
-                    long dayInSeconds = TimeUnit.DAYS.toSeconds(1);
-                    long dateInSeconds = startTimeInMillis / 1000 + dayInSeconds * i;
+            String methodString = PreferenceUtils.getAzanCalcMethodFromPreferences(MainActivity.this);
 
-                    String methodString = PreferenceUtils.getAzanCalcMethodFromPreferences(MainActivity.this);
+            if (methodString == null || methodString.length() == 0) {
+                methodString = AzanCalcMethodUtils.getDefaultCalcMethod(MainActivity.this,
+                        myLocation.getLongitude(), myLocation.getLatitude());
+                sCalcMethodSetDefaultState = true;
+                // Note the next line will cause calling to the function onSharedPreferenceChanged()
+                PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
 
-                    if (methodString == null || methodString.length() == 0) {
-                        methodString = getDefaultCalcMethod(longitude, latitude);
-                        sCalcMethodSetDefaultState = true;
-                        // Note the next line will cause calling to the function onSharedPreferenceChanged()
-                        PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
-
-                    }
-
-                    URL url = NetworkUtils.buildUrl(dateInSeconds, longitude, latitude, getAzanCalcMethodInt(methodString));
-                    jsonResponseArray[i] = NetworkUtils.gettingResponseFromHttpUrl(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(LOG_TAG, "error in getting json response from the url");
-                    return null;
-                }
             }
-            return jsonResponseArray;
+
+            try {
+                return FetchDataUtils.getJsonResponseArray(MainActivity.this, myLocation,
+                        STORING_TOTAL_DAYS_NUM, startTimeInMillis);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "error in getting json response from the url");
+                return null;
+            }
         }
 
 
@@ -469,20 +452,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             try {
 
-                // storing all azan times for different days from jsonResponseArray into preferences
-                // file
-                for (int i = 0; i < STORING_TOTAL_DAYS_NUM; i++) {
+                FetchDataUtils.saveAzanAppDataInPreferences(MainActivity.this, jsonResponseArray,
+                        STORING_TOTAL_DAYS_NUM, startTimeInMillis);
 
-                    String dateString = AzanAppTimeUtils.convertMillisToDateString(
-                            startTimeInMillis + i * AzanAppTimeUtils.DAY_IN_MILLIS
-                    );
-
-                    PreferenceUtils.setAzanTimesForDay(MainActivity.this, dateString,
-                            AladhanJsonUtils.getAllAzanTimesIn24Format(jsonResponseArray[i]));
-
-                }
-
-                /* for testing and making sure the data we get from json is identical for what is
+                /* for testing making sure the data we get from json is identical for what is
                  * displayed in the app
                  */
 
@@ -493,6 +466,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 ScheduleAlarmTask.scheduleTaskForNextAzanTime(MainActivity.this);
                 AzanWidgetService.startActionDisplayAzanTime(MainActivity.this);
 
+                // reset fetch extra data counter
+                PreferenceUtils.setFetchExtraCounter(MainActivity.this, 0);
+
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");
                 e.printStackTrace();
@@ -500,33 +476,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
-    /**
-     * in the first time the user installs this app, we do our best to get the correct azan
-     * calculation method for his country
-     * @param longitude
-     * @param latitude
-     * @return the guessed Azan calculation method for the user
-     */
-    private String getDefaultCalcMethod(double longitude, double latitude) {
 
-        String countryName = new ReverseGeoCoding(latitude, longitude).getCountry()
-                .trim().toLowerCase();
-
-        final String[] COUNTRIES_UMM_AL_QURA =
-                {"Saudi Arabia", "Yemen", "Jordan", "United Arab Emirates", "Qatar", "Bahrain"};
-
-        //Log.d(LOG_TAG, "country: " + countryName);
-        final String COUNTRY_KUWAIT = "Kuwait";
-
-        for (String c : COUNTRIES_UMM_AL_QURA)
-            if (c.toLowerCase().equals(countryName))
-                return this.getString(R.string.pref_calc_method_umm_al_qura);
-
-        if (countryName.equals(COUNTRY_KUWAIT.toLowerCase()))
-            return this.getString(R.string.pref_calc_method_kuwait);
-
-        return this.getString(R.string.pref_calc_method_egyptian_general_authority);
-    }
 
     private void setDateAndAzanTimesViews(String dateString) {
 
@@ -630,34 +580,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         findViewById(R.id.azan_main_layout).setVisibility(View.GONE);
     }
 
-    /**
-     * getting azan calculation method int that used in aladhan api
-     * @param methodString the calculation method that stored in the preference file
-     * @return azan calculation method int corresponding to a given method calculation
-     */
-    private int getAzanCalcMethodInt(String methodString) {
-
-        if (methodString.equals(getString(R.string.pref_calc_method_egyptian_general_authority)))
-            return NetworkUtils.METHOD_EGYPTIAN_GENERAL_AUTHORITY;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_umm_al_qura)))
-            return NetworkUtils.METHOD_UMM_AL_QURA;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_mwl)))
-            return NetworkUtils.METHOD_MUSLIM_WORLD_LEAGUE;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_kuwait)))
-            return NetworkUtils.METHOD_KUWAIT;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_islamic_university_karachi)))
-            return NetworkUtils.METHOD_UNIVERSITY_ISLAMIC_SCIENCE_KARACHI;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_isna)))
-            return NetworkUtils.METHOD_ISLAMIC_SOCIETY_NORTH_AMERICA;
-
-        throw new RuntimeException("unknown azan calculation method: " + methodString);
-
-    }
 
 
 

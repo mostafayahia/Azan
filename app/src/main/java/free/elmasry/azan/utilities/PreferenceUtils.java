@@ -20,8 +20,11 @@ package free.elmasry.azan.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import free.elmasry.azan.R;
+
+import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
 
 /**
  * Created by yahia on 12/25/17.
@@ -30,7 +33,12 @@ import free.elmasry.azan.R;
 public class PreferenceUtils {
 
     private static final String AZAN_TIME_SEPARATOR = "ZZZ";
-    private static final String AZAN_CALC_METHOD_KEY = "azan-calc-method-key";
+
+    private static final String AZAN_LOCATION_LONGITUDE_KEY = "azan-location-longitude-key";
+    private static final String AZAN_LOCATION_LATITUDE_KEY = "azan-location-latitude-key";
+
+    private static final String FETCH_EXTRA_COUNT_KEY = "fetch-extra-count-key";
+    private static final String FETCH_EXTRA_LAST_DATE_TIME_STRING_KEY = "fetch-extra-last-date-time-string-key";
 
     /**
      * save in preference object azan times for a certain day
@@ -119,10 +127,88 @@ public class PreferenceUtils {
 
     }
 
+
     public static void setAzanCalcMethodInPreferences(Context context, String methodString) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(context.getString(R.string.pref_calc_method_key), methodString);
         editor.apply();
+    }
+
+    /**
+     * save user location in shared preferences
+     * @param context
+     * @param myLocation
+     */
+    public static void setUserLocation(Context context, MyLocation myLocation) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(AZAN_LOCATION_LONGITUDE_KEY, myLocation.getLongitude()+"");
+        editor.putString(AZAN_LOCATION_LATITUDE_KEY, myLocation.getLatitude()+"");
+        editor.apply();
+    }
+
+    /**
+     * get user location from shared preferences
+     * @param context
+     * @return
+     */
+    public static MyLocation getUserLocation(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String longitudeText = sharedPreferences.getString(AZAN_LOCATION_LONGITUDE_KEY, "");
+        String latitudeText = sharedPreferences.getString(AZAN_LOCATION_LATITUDE_KEY, "");
+
+        MyLocation myLocation = new MyLocation();
+
+        if (!TextUtils.isEmpty(longitudeText) && !TextUtils.isEmpty(latitudeText)) {
+            myLocation.setLongitude(Double.valueOf(longitudeText));
+            myLocation.setLatitude(Double.valueOf(latitudeText));
+        }
+
+        return myLocation;
+    }
+
+    /**
+     * save the number of successful fetching for extra data in shared preferences
+     * @param context
+     * @param count
+     */
+    public static void setFetchExtraCounter(Context context, int count) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putInt(FETCH_EXTRA_COUNT_KEY, count);
+        editor.apply();
+    }
+
+    /**
+     * get the number of successful fetching for extra data from shared preferences
+     * @param context
+     * @return
+     */
+    public static int getFetchExtraCounter(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getInt(FETCH_EXTRA_COUNT_KEY, 0);
+    }
+
+    /**
+     * save the date time string like "13 Jun 2018 13:10:22" for the last successful fetching for data
+     * in share preferences
+     * @param context
+     * @param lastDateTimeString
+     */
+    public static void setFetchExtraLastDateTimeString(Context context, String lastDateTimeString) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(FETCH_EXTRA_LAST_DATE_TIME_STRING_KEY, lastDateTimeString);
+        editor.apply();
+
+    }
+
+    /**
+     * get the date time string like "13 Jun 2018 13:10:22" for the last successful fetching for data
+     * from shared preferences
+     * @param context
+     * @return
+     */
+    public static String getFetchExtraLastDateTimeString(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(FETCH_EXTRA_LAST_DATE_TIME_STRING_KEY, "");
     }
 
 }
