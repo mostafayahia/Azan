@@ -17,6 +17,8 @@
 package free.elmasry.azan.utilities;
 
 
+import android.text.TextUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -210,6 +212,8 @@ public class AzanAppTimeUtils {
      * @return
      */
     public static String getDateStringFromDateTimeString(String dateTimeString) {
+        if (TextUtils.isEmpty(dateTimeString)) return "";
+
         String[] array = dateTimeString.split(" +");
         return array[0] + " " + array[1] + " " + array[2];
     }
