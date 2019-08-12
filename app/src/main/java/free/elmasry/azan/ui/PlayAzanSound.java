@@ -239,7 +239,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
 
                 // update meta-data regarding to last extra fetch
                 long nowInMillis = System.currentTimeMillis();
-                String nowDateTimeString = AzanAppTimeUtils.convertToDateTimeString(nowInMillis);
+                String nowDateTimeString = AzanAppTimeUtils.convertMillisToDateTimeString(nowInMillis);
                 int extraFetchCounter = PreferenceUtils.getFetchExtraCounter(context);
                 PreferenceUtils.setFetchExtraCounter(context, ++extraFetchCounter);
                 PreferenceUtils.setFetchExtraLastDateTimeString(context, nowDateTimeString);

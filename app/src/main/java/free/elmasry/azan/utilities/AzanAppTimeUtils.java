@@ -201,7 +201,7 @@ public class AzanAppTimeUtils {
      * @param timeInMillis
      * @return
      */
-    public static String convertToDateTimeString(long timeInMillis) {
+    public static String convertMillisToDateTimeString(long timeInMillis) {
         return new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("en"))
                 .format(timeInMillis);
     }

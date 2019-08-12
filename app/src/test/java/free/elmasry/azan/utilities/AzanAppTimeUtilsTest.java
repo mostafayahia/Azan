@@ -68,9 +68,9 @@ public class AzanAppTimeUtilsTest {
     }
 
     @Test
-    public void testConvertToDateTimeString() {
+    public void testConvertMillisToDateTimeString() {
         long timeInMillis = 1565525341000L;
-        String dateTimeString = AzanAppTimeUtils.convertToDateTimeString(timeInMillis);
+        String dateTimeString = AzanAppTimeUtils.convertMillisToDateTimeString(timeInMillis);
         // Note: this time represents GMT+02:00
         Assert.assertEquals("wrong value for converting", "11 Aug 2019 14:09:01", dateTimeString);
     }
