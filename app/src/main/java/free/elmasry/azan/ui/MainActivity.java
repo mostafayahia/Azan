@@ -40,21 +40,18 @@ import android.widget.Toast;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
-import free.elmasry.azan.utilities.AladhanJsonUtils;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppLocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
-import free.elmasry.azan.utilities.ReverseGeoCoding;
+import free.elmasry.azan.utilities.AzanCalcMethodUtils;
+import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
-import free.elmasry.azan.utilities.NetworkUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
-    TextView mDateTextView;
+    private TextView mDateTextView;
 
     private TextView[] mAllAzanTimesTextViews;
     private View[] mAllAzanTimesLayouts;
@@ -412,37 +409,28 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected String[] doInBackground(MyLocation... params) {
             MyLocation myLocation = params[0];
-            double longitude = myLocation.getLongitude();
-            double latitude = myLocation.getLatitude();
-
-            String[] jsonResponseArray = new String[STORING_TOTAL_DAYS_NUM];
 
             startTimeInMillis = System.currentTimeMillis();
 
-            for (int i = 0; i < STORING_TOTAL_DAYS_NUM; i++) {
-                try {
-                    long dayInSeconds = TimeUnit.DAYS.toSeconds(1);
-                    long dateInSeconds = startTimeInMillis / 1000 + dayInSeconds * i;
+            String methodString = PreferenceUtils.getAzanCalcMethodFromPreferences(MainActivity.this);
 
-                    String methodString = PreferenceUtils.getAzanCalcMethodFromPreferences(MainActivity.this);
+            if (methodString == null || methodString.length() == 0) {
+                methodString = AzanCalcMethodUtils.getDefaultCalcMethod(MainActivity.this,
+                        myLocation.getLongitude(), myLocation.getLatitude());
+                sCalcMethodSetDefaultState = true;
+                // Note the next line will cause calling to the function onSharedPreferenceChanged()
+                PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
 
-                    if (methodString == null || methodString.length() == 0) {
-                        methodString = getDefaultCalcMethod(longitude, latitude);
-                        sCalcMethodSetDefaultState = true;
-                        // Note the next line will cause calling to the function onSharedPreferenceChanged()
-                        PreferenceUtils.setAzanCalcMethodInPreferences(MainActivity.this, methodString);
-
-                    }
-
-                    URL url = NetworkUtils.buildUrl(dateInSeconds, longitude, latitude, getAzanCalcMethodInt(methodString));
-                    jsonResponseArray[i] = NetworkUtils.gettingResponseFromHttpUrl(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(LOG_TAG, "error in getting json response from the url");
-                    return null;
-                }
             }
-            return jsonResponseArray;
+
+            try {
+                return FetchDataUtils.getJsonResponseArray(MainActivity.this, myLocation,
+                        STORING_TOTAL_DAYS_NUM, startTimeInMillis);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "error in getting json response from the url");
+                return null;
+            }
         }
 
 
@@ -464,20 +452,10 @@ public class MainActivity extends AppCompatActivity implements
 
             try {
 
-                // storing all azan times for different days from jsonResponseArray into preferences
-                // file
-                for (int i = 0; i < STORING_TOTAL_DAYS_NUM; i++) {
+                FetchDataUtils.saveAzanAppDataInPreferences(MainActivity.this, jsonResponseArray,
+                        STORING_TOTAL_DAYS_NUM, startTimeInMillis);
 
-                    String dateString = AzanAppTimeUtils.convertMillisToDateString(
-                            startTimeInMillis + i * AzanAppTimeUtils.DAY_IN_MILLIS
-                    );
-
-                    PreferenceUtils.setAzanTimesForDay(MainActivity.this, dateString,
-                            AladhanJsonUtils.getAllAzanTimesIn24Format(jsonResponseArray[i]));
-
-                }
-
-                /* for testing and making sure the data we get from json is identical for what is
+                /* for testing making sure the data we get from json is identical for what is
                  * displayed in the app
                  */
 
@@ -488,6 +466,9 @@ public class MainActivity extends AppCompatActivity implements
                 ScheduleAlarmTask.scheduleTaskForNextAzanTime(MainActivity.this);
                 AzanWidgetService.startActionDisplayAzanTime(MainActivity.this);
 
+                // reset fetch extra data counter
+                PreferenceUtils.setFetchExtraCounter(MainActivity.this, 0);
+
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");
                 e.printStackTrace();
@@ -495,33 +476,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * in the first time the user installs this app, we do our best to get the correct azan
-     * calculation method for his country
-     * @param longitude
-     * @param latitude
-     * @return the guessed Azan calculation method for the user
-     */
-    private String getDefaultCalcMethod(double longitude, double latitude) {
 
-        String countryName = new ReverseGeoCoding(latitude, longitude).getCountry()
-                .trim().toLowerCase();
-
-        final String[] COUNTRIES_UMM_AL_QURA =
-                {"Saudi Arabia", "Yemen", "Jordan", "United Arab Emirates", "Qatar", "Bahrain"};
-
-        //Log.d(LOG_TAG, "country: " + countryName);
-        final String COUNTRY_KUWAIT = "Kuwait";
-
-        for (String c : COUNTRIES_UMM_AL_QURA)
-            if (c.toLowerCase().equals(countryName))
-                return this.getString(R.string.pref_calc_method_umm_al_qura);
-
-        if (countryName.equals(COUNTRY_KUWAIT.toLowerCase()))
-            return this.getString(R.string.pref_calc_method_kuwait);
-
-        return this.getString(R.string.pref_calc_method_egyptian_general_authority);
-    }
 
     private void setDateAndAzanTimesViews(String dateString) {
 
@@ -625,34 +580,6 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.azan_main_layout).setVisibility(View.GONE);
     }
 
-    /**
-     * getting azan calculation method int that used in aladhan api
-     * @param methodString the calculation method that stored in the preference file
-     * @return azan calculation method int corresponding to a given method calculation
-     */
-    private int getAzanCalcMethodInt(String methodString) {
-
-        if (methodString.equals(getString(R.string.pref_calc_method_egyptian_general_authority)))
-            return NetworkUtils.METHOD_EGYPTIAN_GENERAL_AUTHORITY;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_umm_al_qura)))
-            return NetworkUtils.METHOD_UMM_AL_QURA;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_mwl)))
-            return NetworkUtils.METHOD_MUSLIM_WORLD_LEAGUE;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_kuwait)))
-            return NetworkUtils.METHOD_KUWAIT;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_islamic_university_karachi)))
-            return NetworkUtils.METHOD_UNIVERSITY_ISLAMIC_SCIENCE_KARACHI;
-
-        if (methodString.equals(getString(R.string.pref_calc_method_isna)))
-            return NetworkUtils.METHOD_ISLAMIC_SOCIETY_NORTH_AMERICA;
-
-        throw new RuntimeException("unknown azan calculation method: " + methodString);
-
-    }
 
 
 
