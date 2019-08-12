@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements
             sCalcMethodPreferenceUpdated = false;
             if (HelperUtils.isDeviceOnline(this)) {
                 PreferenceUtils.clearAllAzanTimesStoredInPreferences(this);
-                fetchData(false);
+                fetchData(true);
             } else {
                 showErrorNoConnectionLayout();
             }
