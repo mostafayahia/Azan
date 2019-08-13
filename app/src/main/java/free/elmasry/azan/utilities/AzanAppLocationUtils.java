@@ -40,10 +40,14 @@ public class AzanAppLocationUtils {
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                MyLocation myLocation = new MyLocation();
-                myLocation.setLatitude(location.getLatitude());
-                myLocation.setLongitude(location.getLongitude());
-                locationSuccessHandler.onLocationSuccess(myLocation);
+                if (null == location) {
+                    locationSuccessHandler.onLocationSuccess(null);
+                } else {
+                    MyLocation myLocation = new MyLocation();
+                    myLocation.setLatitude(location.getLatitude());
+                    myLocation.setLongitude(location.getLongitude());
+                    locationSuccessHandler.onLocationSuccess(myLocation);
+                }
             }
         });
 
