@@ -154,9 +154,11 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             String lastDateTimeString = PreferenceUtils.getFetchExtraLastDateTimeString(this);
             String lastDateString = AzanAppTimeUtils.getDateStringFromDateTimeString(lastDateTimeString);
 
-            Log.d(LOG_TAG, "Just BEFORE fetching any extra data");
+            Log.d(LOG_TAG, "=========Just BEFORE fetching any extra data========");
             Log.d(LOG_TAG, "fetchExtraCounter: " + fetchExtraCounter);
             Log.d(LOG_TAG, "fetchExtraLastDateTimeString: " + lastDateTimeString);
+            Log.d(LOG_TAG, "lastStoredDateString: " +
+                    PreferenceUtils.getLastStoredDateStringForData(this));
 
             if (lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
                 return; // No point for continue (Max: one fetch extra per day)
@@ -213,9 +215,19 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         protected String[] doInBackground(MyLocation... myLocations) {
             MyLocation myLocation = myLocations[0];
 
-            startTimeInMillis = System.currentTimeMillis();
+            Context context = PlayAzanSound.this;
+
+            String lastStoreDateString = PreferenceUtils.getLastStoredDateStringForData(context);
+
+            if (TextUtils.isEmpty(lastStoreDateString)) {
+                return null; //Nothing to do!
+            }
+
+            startTimeInMillis = AzanAppTimeUtils.convertDateToMillis(
+                    AzanAppTimeUtils.getDayAfterDateString(lastStoreDateString));
+
             try {
-                return FetchDataUtils.getJsonResponseArray(PlayAzanSound.this, myLocation,
+                return FetchDataUtils.getJsonResponseArray(context, myLocation,
                         FETCH_EXTRA_STORE_DAYS, startTimeInMillis);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -244,9 +256,11 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
                 PreferenceUtils.setFetchExtraCounter(context, ++extraFetchCounter);
                 PreferenceUtils.setFetchExtraLastDateTimeString(context, nowDateTimeString);
 
-                Log.d(LOG_TAG, "fetch extra data DONE successfully :)");
+                Log.d(LOG_TAG, "===== fetch extra data DONE successfully :)) =====");
                 Log.d(LOG_TAG, "fetchExtraCounter: " + PreferenceUtils.getFetchExtraCounter(context));
                 Log.d(LOG_TAG, "fetchExtraLastDateTimeString: " + PreferenceUtils.getFetchExtraLastDateTimeString(context));
+                Log.d(LOG_TAG, "lastStoredDateString: " +
+                        PreferenceUtils.getLastStoredDateStringForData(context));
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");
                 e.printStackTrace();

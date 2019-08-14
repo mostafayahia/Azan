@@ -114,6 +114,29 @@ public class PreferenceUtils {
         editor.commit();
     }
 
+    /**
+     * getting last stored date for Azan times for that
+     * the form will be like "13 Jun 2019"
+     * @return
+     */
+    public static String getLastStoredDateStringForData(Context context) {
+        String todayString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
+
+        if (PreferenceUtils.getAzanTimesIn24Format(context, todayString) == null)
+            return "";
+
+        String lastStoredDateString = todayString;
+
+        String testDateString = AzanAppTimeUtils.getDayAfterDateString(lastStoredDateString);
+
+        while (PreferenceUtils.getAzanTimesIn24Format(context, testDateString) != null) {
+            lastStoredDateString = testDateString;
+            testDateString = AzanAppTimeUtils.getDayAfterDateString(lastStoredDateString);
+        }
+
+        return lastStoredDateString;
+    }
+
     public static String getAzanAudioFromPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.pref_azan_audio_key),
