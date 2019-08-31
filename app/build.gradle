@@ -6,8 +6,8 @@ android {
         applicationId "free.elmasry.azan"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 12
-        versionName "2.1.4"
+        versionCode 13
+        versionName "2.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
