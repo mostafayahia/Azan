@@ -24,8 +24,6 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -117,33 +115,6 @@ public class HelperUtils {
     public static boolean isLollipop() {
         int apiLevel = Build.VERSION.SDK_INT;
         return apiLevel == 21 || apiLevel == 22;
-    }
-
-
-    /**
-     * determine if the location is enabled in the system settings of the device or not
-     * @param context the base context for the application
-     * @return true if the location is enabled in the system settings of the device
-     */
-    public static boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        }else{
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
     }
 
     /** Open another app.
