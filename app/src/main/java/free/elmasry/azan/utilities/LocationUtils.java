@@ -14,7 +14,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class AzanAppLocationUtils {
+public class LocationUtils {
 
     /**
      * return the location of the user if there is a permission to access the location of the user

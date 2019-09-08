@@ -24,7 +24,7 @@ import android.text.TextUtils;
 
 import free.elmasry.azan.R;
 
-import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
+import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 /**
  * Created by yahia on 12/25/17.

@@ -41,7 +41,7 @@ import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 
-import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
+import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 

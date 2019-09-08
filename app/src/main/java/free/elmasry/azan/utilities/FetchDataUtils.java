@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
+import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 public class FetchDataUtils {
 

@@ -47,19 +47,19 @@ import java.util.Locale;
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
-import free.elmasry.azan.utilities.AzanAppLocationUtils;
+import free.elmasry.azan.utilities.LocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.AzanCalcMethodUtils;
 import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
-import static free.elmasry.azan.utilities.AzanAppLocationUtils.MyLocation;
+import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
 
 public class MainActivity extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener, AzanAppLocationUtils.LocationSuccessHandler {
+        SharedPreferences.OnSharedPreferenceChangeListener, LocationUtils.LocationSuccessHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -280,12 +280,12 @@ public class MainActivity extends AppCompatActivity implements
         MyLocation myLocation = PreferenceUtils.getUserLocation(this);
 
         if (reloadLocation || myLocation == null || !myLocation.isDataNotNull()) {
-            if (!AzanAppLocationUtils.locationPermissionGranted(this, MY_PERMISSION_LOCATION_REQUEST_CODE)) {
+            if (!LocationUtils.locationPermissionGranted(this, MY_PERMISSION_LOCATION_REQUEST_CODE)) {
                 return; // No point for continue
             }
 
             // get the location of the user then fetching the data from the internet
-            AzanAppLocationUtils.processBasedOnLocation(this, this, MY_PERMISSION_LOCATION_REQUEST_CODE);
+            LocationUtils.processBasedOnLocation(this, this, MY_PERMISSION_LOCATION_REQUEST_CODE);
         } else {
             onLocationSuccess(myLocation);
         }
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (AzanAppLocationUtils.isLocationEnabled(MainActivity.this)) {
+                        if (LocationUtils.isLocationEnabled(MainActivity.this)) {
                             // we will try to open google map app hopefully this makes the android
                             // stores and caches the device location
                             HelperUtils.openApp(MainActivity.this, "com.google.android.apps.maps");
