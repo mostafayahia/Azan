@@ -56,6 +56,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
      */
     private static final int FETCH_EXTRA_STORE_DAYS = 3;
 
+    private static final boolean DEBUG = false;
+
 
 
 
@@ -149,6 +151,15 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
          */
 
         if (HelperUtils.isDeviceOnline(this)) {
+
+            /*
+             * we use DEBUG to test the scenario of the behavior of reaching max numbers of fetching extra
+             */
+            if (DEBUG) {
+                PreferenceUtils.setFetchExtraCounter(this, MAX_FETCH_DAYS + 1);
+                PreferenceUtils.setFetchExtraLastDateTimeString(this, "10 Jun 2019 11:11:00");
+            }
+
             long nowInMillis = System.currentTimeMillis();
             int fetchExtraCounter = PreferenceUtils.getFetchExtraCounter(this);
             String lastDateTimeString = PreferenceUtils.getFetchExtraLastDateTimeString(this);
@@ -160,7 +171,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             Log.d(LOG_TAG, "lastStoredDateString: " +
                     PreferenceUtils.getLastStoredDateStringForData(this));
 
-            if (lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
+            if (!DEBUG && lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
                 return; // No point for continue (Max: one fetch extra per day)
             }
 
