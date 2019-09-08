@@ -13,6 +13,8 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class PreferenceUtilsTest {
 
+    private static final String LOG_TAG = PreferenceUtilsTest.class.getSimpleName();
+
     @Test
     public void useAppContext() {
         // Context of the app under test.
@@ -27,8 +29,18 @@ public class PreferenceUtilsTest {
          * we just print the last date string int which the app storing data
          */
         Context appContext = InstrumentationRegistry.getTargetContext();
-        Log.d("PreferenceUtilsTest", "========================" +
+        Log.d(LOG_TAG, "========================" +
                 PreferenceUtils.getLastStoredDateStringForData(appContext) + "======================");
+    }
+
+    @Test
+    public void testGetFetchExtraLastDateTimeString() {
+        /**
+         * we just print the output from calling the method
+         */
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        Log.d(LOG_TAG, "========================" +
+                PreferenceUtils.getFetchExtraLastDateTimeString(appContext) + "======================");
     }
 
 }
