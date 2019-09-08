@@ -24,7 +24,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="label_settings">Settings</string>
-    <string name="action_reloading_data">Reloading Data</string>
+    <string name="action_update_location">Update Location</string>
 
     <!-- ==== preferences string resources ==== -->
 

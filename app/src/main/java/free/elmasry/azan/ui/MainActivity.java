@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            case R.id.action_reloading_data:
+            case R.id.action_update_location:
                 if (HelperUtils.isDeviceOnline(this)) {
                     fetchData(true);
                 } else {
