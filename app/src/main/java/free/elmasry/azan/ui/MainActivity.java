@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_update_location:
                 if (HelperUtils.isDeviceOnline(this)) {
-                    ((TextView) findViewById(R.id.downloading_wait_or_failed_text_view)).setText(R.string.please_wait_message);
                     fetchData(true);
                 } else {
                     showErrorNoConnectionLayout();
@@ -438,6 +437,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            ((TextView) findViewById(R.id.downloading_wait_or_failed_text_view)).setText(R.string.please_wait_message);
             showDownloadingWaitLayout();
         }
 
