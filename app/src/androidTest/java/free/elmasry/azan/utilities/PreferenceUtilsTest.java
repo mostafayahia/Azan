@@ -28,9 +28,9 @@ public class PreferenceUtilsTest {
         /**
          * we just print the last date string int which the app storing data
          */
+        Log.d(LOG_TAG, "=================testGetLastStoredDateStringForData()===============");
         Context appContext = InstrumentationRegistry.getTargetContext();
-        Log.d(LOG_TAG, "========================" +
-                PreferenceUtils.getLastStoredDateStringForData(appContext) + "======================");
+        Log.d(LOG_TAG, PreferenceUtils.getLastStoredDateStringForData(appContext));
     }
 
     @Test
@@ -38,9 +38,9 @@ public class PreferenceUtilsTest {
         /**
          * we just print the output from calling the method
          */
+        Log.d(LOG_TAG, "=================testGetFetchExtraLastDateTimeString()===============");
         Context appContext = InstrumentationRegistry.getTargetContext();
-        Log.d(LOG_TAG, "========================" +
-                PreferenceUtils.getFetchExtraLastDateTimeString(appContext) + "======================");
+        Log.d(LOG_TAG, PreferenceUtils.getFetchExtraLastDateTimeString(appContext));
     }
 
 }
