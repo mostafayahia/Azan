@@ -57,6 +57,7 @@
         </receiver>
 
         <service android:name=".widget.AzanWidgetService" />
+        <service android:name=".FetchExtraService" />
     </application>
 
 </manifest>
