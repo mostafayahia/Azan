@@ -4,17 +4,21 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:background="#09C"
+    android:background="#fff"
     android:padding="@dimen/widget_margin">
 
     <TextView
         android:id="@+id/widget_azan_time_label_text_view"
+        android:textColor="#303F9F"
+        android:background="#fff"
         style="@style/widgetTextViewStyle"
         tools:text="Asr"
          />
 
     <TextView
         android:id="@+id/widget_azan_time_text_view"
+        android:textColor="#303F9F"
+        android:background="#fff"
         style="@style/widgetTextViewStyle"
         tools:text="03:00"
         />
