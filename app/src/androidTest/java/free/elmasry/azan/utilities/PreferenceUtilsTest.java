@@ -43,4 +43,14 @@ public class PreferenceUtilsTest {
         Log.d(LOG_TAG, PreferenceUtils.getFetchExtraLastDateTimeString(appContext));
     }
 
+    @Test
+    public void testGetFetchExtraCounter() {
+        /**
+         * we just print the output from calling the method
+         */
+        Log.d(LOG_TAG, "=================testGetFetchExtraCounter()===============");
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        Log.d(LOG_TAG, PreferenceUtils.getFetchExtraCounter(appContext)+"");
+    }
+
 }
