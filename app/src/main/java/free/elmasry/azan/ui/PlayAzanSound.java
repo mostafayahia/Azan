@@ -130,8 +130,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
     }
 
     private void fetchExtraData() {
-        final int MAX_FETCH_DAYS = 70;
-        final int WAIT_DAYS_IF_REACH_MAX = 90;
+        final int MAX_FETCH_DAYS = 7;
+        final int WAIT_DAYS_IF_REACH_MAX = 10;
 
         /*
          * if fetchExtraCounter > MAX_FETCH_DAYS we will wait WAIT_DAYS_IF_REACH_MAX days from last
