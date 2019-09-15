@@ -438,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements
         protected void onPreExecute() {
             super.onPreExecute();
             ((TextView) findViewById(R.id.downloading_wait_or_failed_text_view)).setText(R.string.please_wait_message);
-            showDownloadingWaitLayout();
+            showDownloadingWaitOrFailedLayout();
         }
 
         @Override
@@ -449,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
 
-            hideDownloadingWaitLayout();
+            hideDownloadingWaitOrFailedLayout();
 
             try {
 
@@ -561,12 +561,12 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void showDownloadingWaitLayout() {
+    private void showDownloadingWaitOrFailedLayout() {
         findViewById(R.id.downloading_wait_or_failed_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.azan_main_layout).setVisibility(View.GONE);
     }
 
-    private void hideDownloadingWaitLayout() {
+    private void hideDownloadingWaitOrFailedLayout() {
         findViewById(R.id.downloading_wait_or_failed_layout).setVisibility(View.GONE);
         findViewById(R.id.azan_main_layout).setVisibility(View.VISIBLE);
     }
