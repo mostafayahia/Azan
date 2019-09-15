@@ -3,7 +3,7 @@
     android:id="@+id/widget_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="#eee"
     android:gravity="center"
     android:padding="@dimen/widget_margin">
 
@@ -11,14 +11,14 @@
     <TextView
         android:id="@+id/widget_azan_time_text_view"
         android:textColor="#303F9F"
-        android:background="#fff"
+        android:background="#eee"
         style="@style/widgetTextViewStyle"
         tools:text="03:00" />
 
     <TextView
         android:id="@+id/widget_azan_time_label_text_view"
         android:textColor="#303F9F"
-        android:background="#fff"
+        android:background="#eee"
         style="@style/widgetTextViewStyle"
         android:layout_toRightOf="@+id/widget_azan_time_text_view"
         tools:text="العصر" />
