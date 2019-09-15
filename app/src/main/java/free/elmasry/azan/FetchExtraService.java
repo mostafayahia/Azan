@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.FetchDataUtils;
+import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.LocationUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
 
@@ -57,6 +58,9 @@ public class FetchExtraService extends IntentService {
 
     private void handleActionFetchExtraData() {
         Context context = this;
+
+        if (!HelperUtils.isDeviceOnline(context))
+            return;
 
         LocationUtils.MyLocation myLocation = PreferenceUtils.getUserLocation(context);
 
