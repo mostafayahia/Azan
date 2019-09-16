@@ -207,7 +207,19 @@ public class PreferenceUtils {
      */
     public static int getFetchExtraCounter(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(sharedPreferences.getString(FETCH_EXTRA_COUNT_KEY, "0"));
+
+        /*
+         * just make the next step because we changed the type of the counter stored in preferences
+         * from int to string
+         * the next process should be removed later and it's just hot fix
+         */
+        int fetchExtraCounter;
+        try {
+            fetchExtraCounter = Integer.parseInt(sharedPreferences.getString(FETCH_EXTRA_COUNT_KEY, "0"));
+        } catch (ClassCastException e) {
+            fetchExtraCounter = sharedPreferences.getInt(FETCH_EXTRA_COUNT_KEY, 0);
+        }
+        return fetchExtraCounter;
     }
 
     /**
