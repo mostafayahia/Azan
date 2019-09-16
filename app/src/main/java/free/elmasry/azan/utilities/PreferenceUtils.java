@@ -196,7 +196,7 @@ public class PreferenceUtils {
      */
     public static void setFetchExtraCounter(Context context, int count) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putInt(FETCH_EXTRA_COUNT_KEY, count);
+        editor.putString(FETCH_EXTRA_COUNT_KEY, count+"");
         editor.apply();
     }
 
@@ -207,7 +207,7 @@ public class PreferenceUtils {
      */
     public static int getFetchExtraCounter(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getInt(FETCH_EXTRA_COUNT_KEY, 0);
+        return Integer.parseInt(sharedPreferences.getString(FETCH_EXTRA_COUNT_KEY, "0"));
     }
 
     /**

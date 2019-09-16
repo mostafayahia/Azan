@@ -483,6 +483,10 @@ public class MainActivity extends AppCompatActivity implements
 
         String[] allAzanTimesIn24Format =
                 PreferenceUtils.getAzanTimesIn24Format(this, dateString);
+
+        if (allAzanTimesIn24Format == null)
+            return; // No Azan times stored for this date, so Nothing to do!
+
         setAzanTimesViews(allAzanTimesIn24Format);
 
         unhighlightAllTimesViews();

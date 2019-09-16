@@ -69,8 +69,11 @@ public class ScheduleAlarmTask {
 
     public static void scheduleTaskForNextAzanTime(Context context) {
 
-        int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
         String todayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
+        if (PreferenceUtils.getAzanTimesIn24Format(context, todayDateString) == null)
+            return; // No Azan times stored for today so Nothing to do
+
+        int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
 
         int indexOfNextAzanTime;
         String[] allAzanTimesIn24Format;
