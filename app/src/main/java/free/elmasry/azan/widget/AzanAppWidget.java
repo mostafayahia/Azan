@@ -25,6 +25,10 @@ public class AzanAppWidget extends AppWidgetProvider {
 
         String todayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
         String tomorrowDateString = AzanAppTimeUtils.getDayAfterDateString(todayDateString);
+
+        if (PreferenceUtils.getAzanTimesIn24Format(context, todayDateString) == null)
+            return; // No Azan times stored so Nothing to do
+
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
 
         int indexOfNextAzanTime;
