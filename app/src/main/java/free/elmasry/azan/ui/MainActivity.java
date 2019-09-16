@@ -527,6 +527,9 @@ public class MainActivity extends AppCompatActivity implements
         long todayInMillis = AzanAppTimeUtils.convertDateToMillis(mTodayDateString);
         long tomorrowInMillis = todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS;
 
+        if (PreferenceUtils.getAzanTimesIn24Format(this, dateString) == null)
+            return; // No Azan times stored so Nothing to do
+
         int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(this);
 
         if (dateInMillis >= todayInMillis + AzanAppTimeUtils.DAY_IN_MILLIS * 2)
