@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements
                     HelperUtils.showToast(this, R.string.error_no_permission_granted_message, Toast.LENGTH_LONG);
                     finish();
                 } else {
-                    fetchData(false);
+                    fetchData(true);
                 }
 
         }
