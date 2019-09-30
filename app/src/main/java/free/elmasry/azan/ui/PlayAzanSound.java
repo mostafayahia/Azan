@@ -166,7 +166,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
                 return; // No point for continue (Max: one fetch extra per day)
             }
 
-            if (fetchExtraCounter > MAX_FETCH_DAYS && !TextUtils.isEmpty(lastDateString)) {
+            if (!DEBUG && fetchExtraCounter > MAX_FETCH_DAYS && !TextUtils.isEmpty(lastDateString)) {
                 long lastDateInMillis = AzanAppTimeUtils.convertDateToMillis(lastDateString);
                 long waitDaysInMillis = WAIT_DAYS_IF_REACH_MAX * AzanAppTimeUtils.DAY_IN_MILLIS;
                 if (nowInMillis < lastDateInMillis + waitDaysInMillis) {
