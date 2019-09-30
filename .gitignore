@@ -39,3 +39,6 @@ project.properties
 # Gradle-based build
 .gradle
 build/
+
+# attach pid hidden files
+app/.attach_pid*
