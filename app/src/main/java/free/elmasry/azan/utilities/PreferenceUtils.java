@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import free.elmasry.azan.R;
 
@@ -40,10 +41,13 @@ public class PreferenceUtils {
     private static final String FETCH_EXTRA_COUNT_KEY = "fetch-extra-count-key";
     private static final String FETCH_EXTRA_LAST_DATE_TIME_STRING_KEY = "fetch-extra-last-date-time-string-key";
 
+    private static final String LOG_TAG = PreferenceUtils.class.getSimpleName();
+
     /**
      * save in preference object azan times for a certain day
+     *
      * @param dateString it will be in the form "12 Dec 2017" or "12 dec 2017"
-     * @param context the base context of the application
+     * @param context    the base context of the application
      */
     public static void setAzanTimesForDay(Context context, String dateString, String[] allAzanTimesIn24Format) {
 
@@ -64,8 +68,7 @@ public class PreferenceUtils {
     }
 
     /**
-     *
-     * @param context the base context of the application
+     * @param context    the base context of the application
      * @param dateString in the form like "10 Jan 2018"
      * @return azan times in 24-hour format or null if azan times for this date wasn't stored
      */
@@ -78,13 +81,14 @@ public class PreferenceUtils {
         String azanTimesString = preferences.getString(dateString, null);
 
         if (azanTimesString != null && azanTimesString.length() != 0)
-            return azanTimesString.split(AZAN_TIME_SEPARATOR);
+            return MyStringUtils.splitString(azanTimesString, AZAN_TIME_SEPARATOR);
         else
             return null;
     }
 
     /**
      * clear all the data stored in shared preferences
+     *
      * @param context the base context of the application
      */
     public static void clearAllAzanTimesStoredInPreferences(Context context) {
@@ -117,6 +121,7 @@ public class PreferenceUtils {
     /**
      * getting last stored date for Azan times for that
      * the form will be like "13 Jun 2019"
+     *
      * @return
      */
     public static String getLastStoredDateStringForData(Context context) {
@@ -159,18 +164,20 @@ public class PreferenceUtils {
 
     /**
      * save user location in shared preferences
+     *
      * @param context
      * @param myLocation
      */
     public static void setUserLocation(Context context, MyLocation myLocation) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putString(AZAN_LOCATION_LONGITUDE_KEY, myLocation.getLongitude()+"");
-        editor.putString(AZAN_LOCATION_LATITUDE_KEY, myLocation.getLatitude()+"");
+        editor.putString(AZAN_LOCATION_LONGITUDE_KEY, myLocation.getLongitude() + "");
+        editor.putString(AZAN_LOCATION_LATITUDE_KEY, myLocation.getLatitude() + "");
         editor.apply();
     }
 
     /**
      * get user location from shared preferences
+     *
      * @param context
      * @return
      */
@@ -191,17 +198,19 @@ public class PreferenceUtils {
 
     /**
      * save the number of successful fetching for extra data in shared preferences
+     *
      * @param context
      * @param count
      */
     public static void setFetchExtraCounter(Context context, int count) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putString(FETCH_EXTRA_COUNT_KEY, count+"");
+        editor.putString(FETCH_EXTRA_COUNT_KEY, count + "");
         editor.apply();
     }
 
     /**
      * get the number of successful fetching for extra data from shared preferences
+     *
      * @param context
      * @return
      */
@@ -225,6 +234,7 @@ public class PreferenceUtils {
     /**
      * save the date time string like "13 Jun 2018 13:10:22" for the last successful fetching for data
      * in share preferences
+     *
      * @param context
      * @param lastDateTimeString
      */
@@ -238,6 +248,7 @@ public class PreferenceUtils {
     /**
      * get the date time string like "13 Jun 2018 13:10:22" for the last successful fetching for data
      * from shared preferences
+     *
      * @param context
      * @return
      */

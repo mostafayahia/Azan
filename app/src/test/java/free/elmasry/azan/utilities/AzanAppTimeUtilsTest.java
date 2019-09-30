@@ -81,4 +81,23 @@ public class AzanAppTimeUtilsTest {
         Assert.assertEquals("wrong value for extracting", "11 Aug 2019", dateTimeString);
     }
 
+    @Test
+    public void testConvertMillisToDate() {
+        long timeInMillis = 1565525341000L - AzanAppTimeUtils.DAY_IN_MILLIS * 2;
+        long timeInMillis2 = 1565525341000L;
+        String dateTimeString = AzanAppTimeUtils.convertMillisToDateString(timeInMillis);
+        String dateTimeString2 = AzanAppTimeUtils.convertMillisToDateString(timeInMillis2);
+        // Note: this time represents GMT+02:00
+        Assert.assertEquals("wrong value for converting", "09 Aug 2019", dateTimeString);
+        Assert.assertEquals("wrong value for converting", "11 Aug 2019", dateTimeString2);
+    }
+
+
+    @Test
+    public void testGetDayAfterDateString() {
+        String lastStoredDateString = "27 Oct 2019";
+        String actualOutput = AzanAppTimeUtils.getDayAfterDateString(lastStoredDateString);
+        String expectedOutput = "28 Oct 2019";
+        Assert.assertEquals(expectedOutput, actualOutput);
+    }
 }

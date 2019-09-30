@@ -120,6 +120,26 @@ public class AzanAppTimeUtils {
 
     }
 
+    /**
+     * convert month from 2 to Feb
+     *
+     * @param monthInt number represent the month must be between 1 and 12
+     * @return String represents the month like "Jan" or "Aug"
+     */
+    public static String convertMonthFromIntToString(int monthInt) {
+
+        if (monthInt > 12 || monthInt < 1)
+            throw new RuntimeException("the monthInt must be between 1 and 12, the given parameter:  " + monthInt);
+
+
+        String[] monthsString =
+                {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+
+        return monthsString[monthInt - 1];
+
+    }
+
 
     /**
      * @param dayMonthYearString in the format like "2 Dec 2017" or "02 December 1990"
@@ -168,8 +188,17 @@ public class AzanAppTimeUtils {
         * AND THE APP MAY BE CRASH OR WON'T WORK CORRECTLY
         */
 
-        return new SimpleDateFormat("dd MMM yyyy", new Locale("en"))
-                .format(dateInMillis);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // the given number is zero based
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //return new SimpleDateFormat("dd MMM yyyy", new Locale("en")).format(dateInMillis);
+        return ((day < 10) ? "0" : "") + day + " " + // prefixing the day with 0 if day < 10
+                convertMonthFromIntToString(month) + " " +
+                year;
     }
 
     /**

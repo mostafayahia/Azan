@@ -41,8 +41,9 @@ public class HelperUtils {
 
     /**
      * show toast message with short duration
+     *
      * @param context the base context of the application
-     * @param text the message you want to display
+     * @param text    the message you want to display
      */
     public static void showToast(Context context, String text) {
         showToast(context, text, Toast.LENGTH_SHORT);
@@ -50,7 +51,8 @@ public class HelperUtils {
 
     /**
      * show toast message with short duration
-     * @param context the base context of the application
+     *
+     * @param context     the base context of the application
      * @param stringResId the resId for the string you want to display
      */
     public static void showToast(Context context, int stringResId) {
@@ -59,9 +61,10 @@ public class HelperUtils {
 
     /**
      * show toast message with a specific duration
-      * @param context the base context of the application
+     *
+     * @param context     the base context of the application
      * @param stringResId the resId for the string you want to display
-     * @param duration can be Toast.LENGTH_SHORT or Toast.LENGTH_LONG
+     * @param duration    can be Toast.LENGTH_SHORT or Toast.LENGTH_LONG
      */
     public static void showToast(Context context, int stringResId, int duration) {
         showToast(context, context.getString(stringResId), duration);
@@ -69,8 +72,9 @@ public class HelperUtils {
 
     /**
      * show toast message with a specific duration
-     * @param context the base context of the application
-     * @param text the message you want to display
+     *
+     * @param context  the base context of the application
+     * @param text     the message you want to display
      * @param duration can be Toast.LENGTH_SHORT or Toast.LENGTH_LONG
      */
     public static void showToast(Context context, String text, int duration) {
@@ -83,6 +87,7 @@ public class HelperUtils {
 
     /**
      * check if the device is connected to the internet or not
+     *
      * @return true if the device is connected to the internet, false otherwise
      */
     public static boolean isDeviceOnline(Context context) {
@@ -94,7 +99,8 @@ public class HelperUtils {
 
     /**
      * setting locale regardless the locale of the device
-     * @param context context of the application
+     *
+     * @param context      context of the application
      * @param languageCode like "en", "ar",........
      */
 
@@ -110,6 +116,7 @@ public class HelperUtils {
 
     /**
      * determine the device is Lollipop version or not
+     *
      * @return true of api level of the device is Lollipop
      */
     public static boolean isLollipop() {
@@ -117,8 +124,10 @@ public class HelperUtils {
         return apiLevel == 21 || apiLevel == 22;
     }
 
-    /** Open another app.
-     * @param context current Context, like Activity, App, or Service
+    /**
+     * Open another app.
+     *
+     * @param context     current Context, like Activity, App, or Service
      * @param packageName the full package name of the app to open
      * @return true if likely successful, false if unsuccessful
      */
@@ -140,15 +149,16 @@ public class HelperUtils {
 
     /**
      * toggle the direction of the linear layout (from rtl to ltr and vice versa)
+     *
      * @param linearLayout the linearLayout that you want to change its direction
      */
     public static void changeDirectionOfLinearLayout(LinearLayout linearLayout) {
         ArrayList<View> views = new ArrayList<View>();
-        for(int x = 0; x < linearLayout.getChildCount(); x++) {
+        for (int x = 0; x < linearLayout.getChildCount(); x++) {
             views.add(linearLayout.getChildAt(x));
         }
         linearLayout.removeAllViews();
-        for(int x = views.size() - 1; x >= 0; x--) {
+        for (int x = views.size() - 1; x >= 0; x--) {
             linearLayout.addView(views.get(x));
         }
     }
