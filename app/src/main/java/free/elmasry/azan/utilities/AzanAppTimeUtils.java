@@ -61,6 +61,7 @@ public class AzanAppTimeUtils {
 
     /**
      * getting time according to the default locale of the device
+     *
      * @param hourAndMinute in the format like "06:13"
      * @return time using default locale, for example if the default locale is arabic, it'll convert
      * the numbers from english to arabic (like "۱۲:۲۳")
@@ -91,8 +92,6 @@ public class AzanAppTimeUtils {
         String[] hourAndMinute = hourAndMinuteString.split(":");
         return Integer.parseInt(hourAndMinute[1]);
     }
-
-
 
 
     /**
@@ -155,8 +154,8 @@ public class AzanAppTimeUtils {
 
     /**
      * @param dayMonthYearString in the format like "2 Dec 2017" or "02 December 1990"
-     * @param hourIn24 hour in 24-hour format like 13
-     * @param minute the minute which is value between 0 to 59
+     * @param hourIn24           hour in 24-hour format like 13
+     * @param minute             the minute which is value between 0 to 59
      * @return the date in Milliseconds at the clock hh:mm:0.0 of your region but in UTC/GMT time
      */
     public static long convertDateToMillis(String dayMonthYearString, int hourIn24, int minute) {
@@ -184,9 +183,9 @@ public class AzanAppTimeUtils {
     public static String convertMillisToDateString(long dateInMillis) {
 
         /*
-        * DON'T CHANGE THIS DATE PATTERN OR LOCALE, IT WILL MISMATCH FROM THE DATE SAVED IN THE SHARED_PREFERENCE
-        * AND THE APP MAY BE CRASH OR WON'T WORK CORRECTLY
-        */
+         * DON'T CHANGE THIS DATE PATTERN OR LOCALE, IT WILL MISMATCH FROM THE DATE SAVED IN THE SHARED_PREFERENCE
+         * AND THE APP MAY BE CRASH OR WON'T WORK CORRECTLY
+         */
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
@@ -208,9 +207,48 @@ public class AzanAppTimeUtils {
      * @return "03 Dec 2014" if the given parameter is "02 Dec 2014"
      */
     public static String getDayAfterDateString(String dateString) {
-        long dateInMillis =
-                AzanAppTimeUtils.convertDateToMillis(dateString) + DAY_IN_MILLIS;
-        return AzanAppTimeUtils.convertMillisToDateString(dateInMillis);
+        if (dateString == null || dateString.trim().isEmpty())
+            throw new IllegalArgumentException("Not valid dateString, the given one: " + dateString);
+
+        dateString = dateString.trim().toLowerCase();
+        String[] dateArray = dateString.split(" +");
+
+        final int day = Integer.parseInt(dateArray[0]);
+        final String monthString = dateArray[1].substring(0, 3).toLowerCase();
+        final int year = Integer.parseInt(dateArray[2]);
+
+        final String thirtyOneDaysMonths = "jan-mar-may-jul-aug-oct-dec";
+        final String thirtyDayMonths = "apr-jun-sep-nov";
+        final String febMonth = "feb";
+        final String decMonth = "dec";
+
+        // set the default values of the date for day after
+        int yearAfterIncrease = year;
+        int dayAfterIncrease = day + 1;
+        String monthStringAfterIncrease = monthString;
+
+        // handle exceptions
+        if ((day == 28 && monthString.equals(febMonth) && (year % 4) != 0) ||
+                (day == 29 && monthString.equals(febMonth) && (year % 4) == 0) ||
+                (day == 30 && thirtyDayMonths.contains(monthString)) ||
+                (day == 31 && thirtyOneDaysMonths.contains(monthString))
+        ) {
+            dayAfterIncrease = 1;
+            final int monthIntAfterIncrease = monthString.equals(decMonth) ? 1 :
+                    convertMonthFromStringToInt(monthString) + 1;
+            monthStringAfterIncrease = convertMonthFromIntToString(monthIntAfterIncrease);
+        }
+
+        // if Dec 31 then the day after will be in the new year
+        if (day == 31 && monthString.equals(decMonth))
+            yearAfterIncrease = year + 1;
+
+        return // prefixing the day with "0" if day < 10
+                ((dayAfterIncrease < 10) ? "0" : "") + dayAfterIncrease + " " +
+                // make first letter of the month capital like Mar not mar
+                monthStringAfterIncrease.substring(0, 1).toUpperCase() + monthStringAfterIncrease.substring(1) + " " +
+                // year
+                yearAfterIncrease;
     }
 
     /**
@@ -227,6 +265,7 @@ public class AzanAppTimeUtils {
 
     /**
      * convert timeInMillis to date time string ex: 13 Jun 2018 13:10:22
+     *
      * @param timeInMillis
      * @return
      */
@@ -237,6 +276,7 @@ public class AzanAppTimeUtils {
 
     /**
      * get date string like "13 Jun 2018" from date time string like that "13 Jun 2018 15:10:22"
+     *
      * @param dateTimeString
      * @return
      */

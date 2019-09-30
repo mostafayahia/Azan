@@ -95,9 +95,27 @@ public class AzanAppTimeUtilsTest {
 
     @Test
     public void testGetDayAfterDateString() {
-        String lastStoredDateString = "27 Oct 2019";
-        String actualOutput = AzanAppTimeUtils.getDayAfterDateString(lastStoredDateString);
+        String dateString = "27 Oct 2019";
+        String actualOutput = AzanAppTimeUtils.getDayAfterDateString(dateString);
         String expectedOutput = "28 Oct 2019";
         Assert.assertEquals(expectedOutput, actualOutput);
+
+        Assert.assertEquals("02 Nov 2019", AzanAppTimeUtils.getDayAfterDateString("01 Nov 2019"));
+        Assert.assertEquals("17 Jul 2019", AzanAppTimeUtils.getDayAfterDateString("16 Jul 2019"));
+        Assert.assertEquals("30 Nov 2019", AzanAppTimeUtils.getDayAfterDateString("29 Nov 2019"));
+        Assert.assertEquals("30 Apr 2019", AzanAppTimeUtils.getDayAfterDateString("29 Apr 2019"));
+        Assert.assertEquals("29 Mar 2019", AzanAppTimeUtils.getDayAfterDateString("28 Mar 2019"));
+        Assert.assertEquals("31 Aug 2019", AzanAppTimeUtils.getDayAfterDateString("30 Aug 2019"));
+
+        Assert.assertEquals("01 Dec 2019", AzanAppTimeUtils.getDayAfterDateString("30 Nov 2019"));
+        Assert.assertEquals("01 Nov 2019", AzanAppTimeUtils.getDayAfterDateString("31 Oct 2019"));
+        Assert.assertEquals("01 Sep 2019", AzanAppTimeUtils.getDayAfterDateString("31 Aug 2019"));
+        Assert.assertEquals("01 Mar 2019", AzanAppTimeUtils.getDayAfterDateString("28 Feb 2019"));
+        Assert.assertEquals("29 Feb 2020", AzanAppTimeUtils.getDayAfterDateString("28 Feb 2020"));
+        Assert.assertEquals("01 Mar 2020", AzanAppTimeUtils.getDayAfterDateString("29 Feb 2020"));
+
+        Assert.assertEquals("01 Jan 2021", AzanAppTimeUtils.getDayAfterDateString("31 Dec 2020"));
+        Assert.assertEquals("01 Jan 2020", AzanAppTimeUtils.getDayAfterDateString("31 Dec 2019"));
+
     }
 }
