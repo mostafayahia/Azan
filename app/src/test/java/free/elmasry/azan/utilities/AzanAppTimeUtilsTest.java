@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static free.elmasry.azan.utilities.AzanAppTimeUtils.DAY_IN_MILLIS;
+
 /**
  * Created by yahia on 12/29/17.
  */
@@ -54,16 +56,16 @@ public class AzanAppTimeUtilsTest {
 
             // NOTE January representing 1 and December representing 12
 
-            Assert.assertEquals("Can't convert " + monthString + " to " + (i+1), i+1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString));
+            Assert.assertEquals("Can't convert " + monthString + " to " + (i + 1), i + 1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString));
 
             String monthStringUpperCase = monthString.toUpperCase();
-            Assert.assertEquals("Can't convert " + monthStringUpperCase + " to " + (i+1), i+1, AzanAppTimeUtils.convertMonthFromStringToInt(monthStringUpperCase));
+            Assert.assertEquals("Can't convert " + monthStringUpperCase + " to " + (i + 1), i + 1, AzanAppTimeUtils.convertMonthFromStringToInt(monthStringUpperCase));
 
             String monthString3Letters = monthString.substring(0, 3);
-            Assert.assertEquals("Can't convert " + monthString3Letters + " to " + (i+1), i+1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString3Letters));
+            Assert.assertEquals("Can't convert " + monthString3Letters + " to " + (i + 1), i + 1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString3Letters));
 
             String monthString3LettersUpperCase = monthString.substring(0, 3).toUpperCase();
-            Assert.assertEquals("Can't convert " + monthString3LettersUpperCase + " to " + (i+1), i+1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString3LettersUpperCase));
+            Assert.assertEquals("Can't convert " + monthString3LettersUpperCase + " to " + (i + 1), i + 1, AzanAppTimeUtils.convertMonthFromStringToInt(monthString3LettersUpperCase));
         }
     }
 
@@ -83,7 +85,7 @@ public class AzanAppTimeUtilsTest {
 
     @Test
     public void testConvertMillisToDate() {
-        long timeInMillis = 1565525341000L - AzanAppTimeUtils.DAY_IN_MILLIS * 2;
+        long timeInMillis = 1565525341000L - DAY_IN_MILLIS * 2;
         long timeInMillis2 = 1565525341000L;
         String dateTimeString = AzanAppTimeUtils.convertMillisToDateString(timeInMillis);
         String dateTimeString2 = AzanAppTimeUtils.convertMillisToDateString(timeInMillis2);
@@ -95,10 +97,16 @@ public class AzanAppTimeUtilsTest {
 
     @Test
     public void testGetDayAfterDateString() {
-        String dateString = "27 Oct 2019";
-        String actualOutput = AzanAppTimeUtils.getDayAfterDateString(dateString);
-        String expectedOutput = "28 Oct 2019";
-        Assert.assertEquals(expectedOutput, actualOutput);
+        String dateString = "25 Oct 2019";
+        String expectedDayAfterDateString = "";
+        String actualDayAfterDateString = "";
+        for (int i = 0; i < 10 * 365; i++) {
+            final long dayAfterInMillis = AzanAppTimeUtils.convertDateToMillis(dateString) + DAY_IN_MILLIS;
+            expectedDayAfterDateString = AzanAppTimeUtils.convertMillisToDateString(dayAfterInMillis);
+            actualDayAfterDateString = AzanAppTimeUtils.getDayAfterDateString(dateString);
+            Assert.assertEquals(expectedDayAfterDateString, actualDayAfterDateString);
+            dateString = expectedDayAfterDateString;
+        }
 
         Assert.assertEquals("02 Nov 2019", AzanAppTimeUtils.getDayAfterDateString("01 Nov 2019"));
         Assert.assertEquals("17 Jul 2019", AzanAppTimeUtils.getDayAfterDateString("16 Jul 2019"));
