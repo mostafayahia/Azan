@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         // for testing alarm at certain time
-//        ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(this, "2 jan 2018", 22, 27);
+//        ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(this, "26 Mar 2020", 22, 23);
 
         if (mCurrentDateDisplayed != null) {
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
