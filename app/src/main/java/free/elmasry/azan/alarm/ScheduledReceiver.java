@@ -23,6 +23,8 @@ import android.content.Intent;
 
 import free.elmasry.azan.ui.PlayAzanSound;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
+import free.elmasry.azan.utilities.AzanAppTimeUtils;
+import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 
 /**
@@ -32,6 +34,12 @@ import free.elmasry.azan.widget.AzanWidgetService;
 public class ScheduledReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        // if no data stored for the current azan, nothing will do
+        if (PreferenceUtils.getAzanTimesIn24Format(context,
+                AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis())) == null)
+            return;
+
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
         if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
             Intent startPlaySoundActivityIntent = new Intent(context, PlayAzanSound.class);
