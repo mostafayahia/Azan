@@ -122,17 +122,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        /*
-         * for the devices its api level less than 17 and its default language is arabic the
-         * direction for the layout doesn't change automatically to rtl and there is no way to
-          * do it by xml
-         */
-        if (Build.VERSION.SDK_INT < 17 && Locale.getDefault().getLanguage().equals("ar")) {
-            for (View ll : mAllAzanTimesLayouts)
-                HelperUtils.changeDirectionOfLinearLayout((LinearLayout)ll);
-        }
-
-
         // setting mTodayDateString
         mTodayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
 
