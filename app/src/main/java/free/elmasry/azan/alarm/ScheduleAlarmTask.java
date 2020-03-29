@@ -40,8 +40,9 @@ public class ScheduleAlarmTask {
 
     /**
      * Schedule alaram to start AzanSoundActivity
+     *
      * @param context
-     * @param dateString in the format "02 Dec 2018" or "01 jan 2010"
+     * @param dateString     in the format "02 Dec 2018" or "01 jan 2010"
      * @param hourIn24Format
      * @param minute
      */
@@ -56,7 +57,6 @@ public class ScheduleAlarmTask {
 
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(pendingIntent);
         final int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             am.setExactAndAllowWhileIdle(ALARM_TYPE, timeInMillis, pendingIntent);
@@ -100,5 +100,6 @@ public class ScheduleAlarmTask {
         int minute = AzanAppTimeUtils.getMinuteFromTime(hourAndMinuteIn24);
 
         scheduleAlarmForStartingAzanSoundActivityAt(context, dateString, hourIn24Format, minute);
+
     }
 }
