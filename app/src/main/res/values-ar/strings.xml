@@ -20,7 +20,7 @@
     <string name="please_wait_message">يتم تحميل البيانات من النت نرجو الأنتظار دقيقة أو دقيقتين على الأكثر</string>
     <string name="reach_to_max_message">وصلت للحد الأقصى ...</string>
     <string name="reach_to_min_message">وصلت للحد الأدنى...</string>
-    <string name="error_no_permission_granted_message">أذن أستخدام موقعك غير ممنوح، لا يمكنك تشغيل التطبيق</string>
+    <string name="error_no_permission_granted_message">الأذن لم يمنح من المستخدم، لا يمكنك تشغيل التطبيق</string>
 
     <string name="action_settings">إعدادات</string>
     <string name="label_settings">إعدادات</string>

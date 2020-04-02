@@ -20,7 +20,7 @@
     <string name="please_wait_message">Downloading data from the internet, please wait 2 minutes at most...</string>
     <string name="reach_to_max_message">you reached to max limit</string>
     <string name="reach_to_min_message">you reached to min limit</string>
-    <string name="error_no_permission_granted_message">Location permission is not granted, can not run the app</string>
+    <string name="error_no_permission_granted_message">Permission is not granted, can not run the app</string>
 
     <string name="action_settings">Settings</string>
     <string name="label_settings">Settings</string>

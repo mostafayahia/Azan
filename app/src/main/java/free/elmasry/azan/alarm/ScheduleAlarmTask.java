@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import java.util.Calendar;
+
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
@@ -100,6 +102,14 @@ public class ScheduleAlarmTask {
         int minute = AzanAppTimeUtils.getMinuteFromTime(hourAndMinuteIn24);
 
         scheduleAlarmForStartingAzanSoundActivityAt(context, dateString, hourIn24Format, minute);
+
+        // for testing
+//        final int testMinute = 35;
+//        final Calendar c = Calendar.getInstance();
+//        final int testHour = c.getTime().getHours();
+//        c.set(Calendar.MINUTE, testMinute);
+//        if (c.getTimeInMillis() - System.currentTimeMillis() > 1000 * 30)
+//            ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(context, "02 Apr 2020", testHour, testMinute);
 
     }
 }
