@@ -15,4 +15,11 @@
         android:entries="@array/azan_calc_method_options"
         android:entryValues="@array/azan_calc_method_values" />
 
+    <ListPreference
+        android:title="@string/pref_time_format_label"
+        android:key="@string/pref_time_format_key"
+        android:defaultValue="@string/pref_time_format_12_hour"
+        android:entries="@array/time_format_options"
+        android:entryValues="@array/time_format_values" />
+
 </PreferenceScreen>

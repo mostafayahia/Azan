@@ -71,7 +71,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         TextView azanTimeTextView = findViewById(R.id.azan_time_textview);
         String azanTimeIn24HourFormat = allAzanTimesIn24Format[indexOfCurrentAzanTime];
 
-        if (getResources().getBoolean(R.bool.use_24_hour_format)) {
+        if (PreferenceUtils.getTimeFormatFromPreferences(this)
+                .equals(getString(R.string.pref_time_format_24_hour))) {
             azanTimeTextView.setText(AzanAppTimeUtils.getTimeWithDefaultLocale(azanTimeIn24HourFormat));
         } else {
             azanTimeTextView.setText(AzanAppTimeUtils.convertTo12HourFormat(azanTimeIn24HourFormat));

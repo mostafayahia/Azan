@@ -49,7 +49,8 @@ public class AzanAppWidget extends AppWidgetProvider {
 
             views.setTextViewText(R.id.widget_azan_time_label_text_view,
                     AzanAppHelperUtils.getAzanLabel(context, indexOfNextAzanTime));
-            if (context.getResources().getBoolean(R.bool.use_24_hour_format)) {
+            if (PreferenceUtils.getTimeFormatFromPreferences(context)
+                    .equals(context.getString(R.string.pref_time_format_24_hour))) {
                 views.setTextViewText(R.id.widget_azan_time_text_view,
                         AzanAppTimeUtils.getTimeWithDefaultLocale(azanTimeIn24HourFormat));
             } else {

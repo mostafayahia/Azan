@@ -147,6 +147,12 @@ public class PreferenceUtils {
                         context.getString(R.string.pref_audio_takbeer));
     }
 
+    public static String getTimeFormatFromPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.pref_time_format_key),
+                        context.getString(R.string.pref_time_format_12_hour));
+    }
+
     public static String getAzanCalcMethodFromPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.pref_calc_method_key),

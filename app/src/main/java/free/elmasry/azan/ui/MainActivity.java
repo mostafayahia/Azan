@@ -420,6 +420,9 @@ public class MainActivity extends AppCompatActivity implements
             if (sCalcMethodSetDefaultState) sCalcMethodSetDefaultState = false;
             else sCalcMethodPreferenceUpdated = true;
 
+        } else if (preferenceKey.equals(getString(R.string.pref_time_format_key))) {
+            setDateAndAzanTimesViews(mTodayDateString);
+            AzanWidgetService.startActionDisplayAzanTime(this);
         }
     }
 
@@ -531,7 +534,8 @@ public class MainActivity extends AppCompatActivity implements
         for (int i = 0; i < ALL_TIMES_NUM; i++) {
             String azanTimeIn24HourFormat = allAzanTimesIn24Format[i];
 
-            if (getResources().getBoolean(R.bool.use_24_hour_format)) {
+            if (PreferenceUtils.getTimeFormatFromPreferences(this)
+                    .equals(getString(R.string.pref_time_format_24_hour))) {
                 mAllAzanTimesTextViews[i].setText(AzanAppTimeUtils.getTimeWithDefaultLocale(azanTimeIn24HourFormat));
             } else {
                 mAllAzanTimesTextViews[i].setText(AzanAppTimeUtils.convertTo12HourFormat(azanTimeIn24HourFormat));

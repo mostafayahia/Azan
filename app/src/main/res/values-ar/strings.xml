@@ -66,6 +66,9 @@
 
 
     <string name="pref_calc_method_label_islamic_university_karachi">الجامعة الإسلامية بكراتشي</string>
+    <string name="pref_time_format_label">تنسيق الوقت المعروض</string>
+    <string name="pref_time_format_label_12_hour">12 ساعة</string>
+    <string name="pref_time_format_label_24_hour">24 ساعة</string>
 
 
 </resources>
