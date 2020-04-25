@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import free.elmasry.azan.ui.PlayAzanSound;
+import free.elmasry.azan.ui.PlayEqamahSound;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
@@ -43,7 +44,11 @@ public class ScheduledReceiver extends BroadcastReceiver {
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
 
         if (intent.getAction().equals(ScheduleAlarmTask.ACTION_PLAY_EQAMAH_SOUND)) {
-            // TODO: handle this if statement
+            if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
+                Intent startPlaySoundActivityIntent = new Intent(context, PlayEqamahSound.class);
+                startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(startPlaySoundActivityIntent);
+            }
 
         } else {
             if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {

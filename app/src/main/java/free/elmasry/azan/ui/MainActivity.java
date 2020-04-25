@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (mCurrentDateDisplayed != null) {
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            ScheduleAlarmTask.scheduleTaskForNextEqamahTime(this);
             AzanWidgetService.startActionDisplayAzanTime(this);
         }
     }
@@ -494,6 +495,7 @@ public class MainActivity extends AppCompatActivity implements
                 setDateAndAzanTimesViews(mTodayDateString);
 
                 ScheduleAlarmTask.scheduleTaskForNextAzanTime(MainActivity.this);
+                ScheduleAlarmTask.scheduleTaskForNextEqamahTime(MainActivity.this);
                 AzanWidgetService.startActionDisplayAzanTime(MainActivity.this);
 
                 // reset fetch extra data counter
