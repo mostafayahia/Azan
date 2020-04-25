@@ -413,6 +413,11 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    public void testPlayEqamahActivityButtonHandler(View view) {
+        Intent intent = new Intent(this, PlayEqamahSound.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String preferenceKey) {
         if (preferenceKey.equals(getString(R.string.pref_calc_method_key))) {

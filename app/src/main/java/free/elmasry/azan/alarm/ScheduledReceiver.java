@@ -41,12 +41,18 @@ public class ScheduledReceiver extends BroadcastReceiver {
             return;
 
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
-        if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
-            Intent startPlaySoundActivityIntent = new Intent(context, PlayAzanSound.class);
-            startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(startPlaySoundActivityIntent);
+
+        if (intent.getAction().equals(ScheduleAlarmTask.ACTION_PLAY_EQAMAH_SOUND)) {
+            // TODO: handle this if statement
+
         } else {
-            AzanWidgetService.startActionDisplayAzanTime(context);
+            if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
+                Intent startPlaySoundActivityIntent = new Intent(context, PlayAzanSound.class);
+                startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(startPlaySoundActivityIntent);
+            } else {
+                AzanWidgetService.startActionDisplayAzanTime(context);
+            }
         }
     }
 }

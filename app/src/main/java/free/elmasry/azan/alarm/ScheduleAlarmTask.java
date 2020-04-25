@@ -40,6 +40,9 @@ public class ScheduleAlarmTask {
 
     private static final String LOG_TAG = ScheduleAlarmTask.class.getSimpleName();
 
+    public static final String ACTION_PLAY_AZAN_SOUND = "free.elmasry.azan.action.play_azan_sound";
+    public static final String ACTION_PLAY_EQAMAH_SOUND = "free.elmasry.azan.action.play_eqamah_sound";
+
     /**
      * Schedule alaram to start AzanSoundActivity
      *
@@ -52,9 +55,12 @@ public class ScheduleAlarmTask {
 
         long timeInMillis = AzanAppTimeUtils.convertDateToMillis(dateString, hourIn24Format, minute);
 
+        Intent scheduledReceiverIntent = new Intent(context, ScheduledReceiver.class);
+        scheduledReceiverIntent.setAction(ACTION_PLAY_AZAN_SOUND);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 0,
-                new Intent(context, ScheduledReceiver.class),
+                scheduledReceiverIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
 
@@ -69,6 +75,34 @@ public class ScheduleAlarmTask {
             am.set(ALARM_TYPE, timeInMillis, pendingIntent);
         }
     }
+
+    public static void scheduleAlarmForStartingEqamahSoundActivityAt(Context context, String dateString, int hourIn24Format, int minute) {
+
+        long timeInMillis = AzanAppTimeUtils.convertDateToMillis(dateString, hourIn24Format, minute);
+
+        Intent scheduledReceiverIntent = new Intent(context, ScheduledReceiver.class);
+        scheduledReceiverIntent.setAction(ACTION_PLAY_EQAMAH_SOUND);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0,
+                scheduledReceiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pendingIntent);
+        final int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(ALARM_TYPE, timeInMillis, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            am.setExact(ALARM_TYPE, timeInMillis, pendingIntent);
+        } else {
+            am.set(ALARM_TYPE, timeInMillis, pendingIntent);
+        }
+    }
+
+
 
     public static void scheduleTaskForNextAzanTime(Context context) {
 
@@ -112,5 +146,27 @@ public class ScheduleAlarmTask {
 //        if (c.getTimeInMillis() - System.currentTimeMillis() > 1000 * 30)
 //            ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(context, "02 Apr 2020", testHour, testMinute);
 
+    }
+
+    public static void scheduleTaskForNextEqamahTime(Context context) {
+
+        // TODO: implement this method
+        throw new UnsupportedOperationException("this method not implemented yet");
+
+    }
+
+    public static void removeScheduledTaskForEqamahTime(Context context) {
+        Intent scheduledReceiverIntent = new Intent(context, ScheduledReceiver.class);
+        scheduledReceiverIntent.setAction(ACTION_PLAY_EQAMAH_SOUND);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0,
+                scheduledReceiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pendingIntent);
     }
 }

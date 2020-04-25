@@ -281,15 +281,32 @@
 
     <!-- END of 5 Times for Azan-->
 
-    <Button
-        android:id="@+id/test_launch_play_azan_activity_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Launch Play Azan Activity"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:layout_gravity="center_horizontal"
-        android:onClick="testPlayAzanActivityButtonHandler"
-        android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="32dp"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/test_launch_play_azan_activity_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Azan"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:onClick="testPlayAzanActivityButtonHandler" />
+
+            <Button
+                android:id="@+id/test_launch_eqamah_azan_activity_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eqamah"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:layout_marginLeft="32dp"
+                android:onClick="testPlayEqamahActivityButtonHandler" />
+
+        </LinearLayout>
     </LinearLayout>
 
 

@@ -30,6 +30,10 @@
             android:name=".ui.PlayAzanSound"
             android:excludeFromRecents="true" />
 
+        <activity
+            android:name=".ui.PlayEqamahSound"
+            android:excludeFromRecents="true" />
+
         <receiver
             android:name=".alarm.ScheduledReceiver"
             android:exported="false" />
