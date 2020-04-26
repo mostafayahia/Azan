@@ -80,7 +80,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
 
         if (null == savedInstanceState) {
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
-            ScheduleAlarmTask.scheduleTaskForNextEqamahTime(this);
+            ScheduleAlarmTask.scheduleTaskForCurrentEqamahTime(this);
             AzanWidgetService.startActionDisplayAzanTime(this);
         }
 

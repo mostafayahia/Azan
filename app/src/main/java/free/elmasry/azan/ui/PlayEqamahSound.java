@@ -71,6 +71,7 @@ public class PlayEqamahSound extends AppCompatActivity implements MediaPlayer.On
 
         if (null == savedInstanceState) {
             ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            ScheduleAlarmTask.scheduleTaskForNextEqamahTime(this);
             AzanWidgetService.startActionDisplayAzanTime(this);
         }
 

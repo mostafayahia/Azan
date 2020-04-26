@@ -123,6 +123,7 @@ public class ScheduleAlarmTask {
 
     }
 
+
     private static AzanTime getNextAzanTime(Context context) {
 
         String todayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
@@ -160,6 +161,24 @@ public class ScheduleAlarmTask {
         return azanTime;
     }
 
+    private static AzanTime getCurrentAzanTime(Context context) {
+        String todayDateString = AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis());
+        if (PreferenceUtils.getAzanTimesIn24Format(context, todayDateString) == null)
+            return null; // No Azan times stored for today
+
+        final int indexOfCurrentTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
+        final String[] allAzanTimesIn24Format =
+                PreferenceUtils.getAzanTimesIn24Format(context, todayDateString);
+
+        final String hourAndMinuteIn24 = allAzanTimesIn24Format[indexOfCurrentTime];
+        final int hourIn24Format = AzanAppTimeUtils.getHourFromTime(hourAndMinuteIn24);
+        final int minute = AzanAppTimeUtils.getMinuteFromTime(hourAndMinuteIn24);
+
+        final AzanTime azanTime = new AzanTime(hourIn24Format, minute, todayDateString);
+
+        return azanTime;
+    }
+
     private static class AzanTime {
         final int hourIn24Format;
         final int minute;
@@ -178,10 +197,25 @@ public class ScheduleAlarmTask {
 
         if (null == nextAzanTime) return;  // No Azan times stored for today so Nothing to do
 
+        scheduleTaskForEqamahTime(context, nextAzanTime);
+
+    }
+
+    public static void scheduleTaskForCurrentEqamahTime(Context context) {
+
+        final AzanTime currentAzanTime = getCurrentAzanTime(context);
+
+        if (null == currentAzanTime) return;  // No Azan times stored for today so Nothing to do
+
+        scheduleTaskForEqamahTime(context, currentAzanTime);
+
+    }
+
+    private static void scheduleTaskForEqamahTime(Context context, AzanTime azanTime) {
         final int EQAMA_TIME_DIFF_IN_MIN = 20;
 
-        int hourIn24 = nextAzanTime.hourIn24Format;
-        int minute = nextAzanTime.minute;
+        int hourIn24 = azanTime.hourIn24Format;
+        int minute = azanTime.minute;
 
         hourIn24 = (minute + EQAMA_TIME_DIFF_IN_MIN >= 60) ? hourIn24 + 1 : hourIn24;
 
@@ -193,7 +227,7 @@ public class ScheduleAlarmTask {
             minute = (minute + EQAMA_TIME_DIFF_IN_MIN) % 60;
         }
 
-        scheduleAlarmForStartingEqamahSoundActivityAt(context, nextAzanTime.dateString,
+        scheduleAlarmForStartingEqamahSoundActivityAt(context, azanTime.dateString,
                 hourIn24, minute);
 
         // for testing
@@ -203,7 +237,6 @@ public class ScheduleAlarmTask {
 //        c.set(Calendar.MINUTE, testMinute);
 //        if (c.getTimeInMillis() - System.currentTimeMillis() > 1000 * 30)
 //            ScheduleAlarmTask.scheduleAlarmForStartingEqamahSoundActivityAt(context, nextAzanTime.dateString, testHour, testMinute);
-
     }
 
     public static void removeScheduledTaskForEqamahTime(Context context) {
