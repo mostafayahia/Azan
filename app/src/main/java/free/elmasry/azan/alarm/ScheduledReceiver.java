@@ -43,7 +43,7 @@ public class ScheduledReceiver extends BroadcastReceiver {
 
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context);
 
-        if (intent.getAction().equals(ScheduleAlarmTask.ACTION_PLAY_EQAMAH_SOUND)) {
+        if (ScheduleAlarmTask.ACTION_PLAY_EQAMAH_SOUND.equals(intent.getAction())) {
             if (AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime)) {
                 Intent startPlaySoundActivityIntent = new Intent(context, PlayEqamahSound.class);
                 startPlaySoundActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
