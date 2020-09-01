@@ -45,7 +45,8 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
 
     private static final String LOG_TAG = PlayAzanSound.class.getSimpleName();
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG_FETCHING = false;
+    
 
 
 
@@ -57,6 +58,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         setContentView(R.layout.activity_play_azan_sound);
 
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(this);
+
         String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(this,
                 AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()));
 
@@ -164,11 +166,11 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
             Log.d(LOG_TAG, "lastStoredDateString: " +
                     PreferenceUtils.getLastStoredDateStringForData(this));
 
-            if (!DEBUG && lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
+            if (!DEBUG_FETCHING && lastDateString.equals(AzanAppTimeUtils.convertMillisToDateString(nowInMillis))) {
                 return; // No point for continue (Max: one fetch extra per day)
             }
 
-            if (!DEBUG && fetchExtraCounter > MAX_FETCH_DAYS && !TextUtils.isEmpty(lastDateString)) {
+            if (!DEBUG_FETCHING && fetchExtraCounter > MAX_FETCH_DAYS && !TextUtils.isEmpty(lastDateString)) {
                 long lastDateInMillis = AzanAppTimeUtils.convertDateToMillis(lastDateString);
                 long waitDaysInMillis = WAIT_DAYS_IF_REACH_MAX * AzanAppTimeUtils.DAY_IN_MILLIS;
                 if (nowInMillis < lastDateInMillis + waitDaysInMillis) {
