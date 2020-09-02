@@ -42,6 +42,58 @@ public class AzanAppTimeUtils {
     public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
 
     /**
+     * hour range must be  0-23 (24-hour mode)
+     * minute range must be 0-59
+     */
+    public static final class HourMinute {
+        public final int hour;
+        public final int minute;
+        public HourMinute(int hour, int minute) {
+            if (hour > 23 || hour < 0) {
+                throw new IllegalArgumentException("hour range must be 0-23, hour: " + hour);
+            }
+            if (minute < 0 || minute > 59) {
+                throw new IllegalArgumentException("minute range must be 0-59, minute: " + minute);
+            }
+            this.hour = hour;
+            this.minute = minute;
+        }
+    }
+
+    /**
+     * add minutes to certain clock saved in {@link HourMinute object}
+     * return clock after adding minutes, max clock 23:59
+     * @param hourMinute clock saved in {@link HourMinute object}
+     * @param plusMinutes plus minutes to be added to a given clock
+     * throw {@link IllegalArgumentException} if hourMinute is null or plusMinutes out of range 0-59
+     */
+    public static HourMinute addMinutes(final HourMinute hourMinute, final int plusMinutes) {
+        if (null == hourMinute) {
+            throw new IllegalArgumentException(("hourMinute can't be null"));
+        }
+
+        if (plusMinutes < 0 || plusMinutes > 59) {
+            throw new IllegalArgumentException("plusMinutes range must be 0-59, plusMinute: " + plusMinutes);
+        }
+
+        int minute = hourMinute.minute + plusMinutes;
+        int hour = hourMinute.hour;
+
+        if (minute > 59) {
+            minute -= 60;
+            hour += 1;
+        }
+
+        // if hour after increasing minutes exceeds the day time,  Will set hour 23 minutes 59
+        if (hour > 23) {
+            hour = 23;
+            minute = 59;
+        }
+
+        return new HourMinute(hour, minute);
+    }
+
+    /**
      * convert time from 24-hour format to 12-hour format
      *
      * @param time24Hour time in the form like "13:00"

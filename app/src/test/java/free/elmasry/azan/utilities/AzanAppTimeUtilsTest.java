@@ -1,6 +1,6 @@
 package free.elmasry.azan.utilities;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static free.elmasry.azan.utilities.AzanAppTimeUtils.DAY_IN_MILLIS;
+import static free.elmasry.azan.utilities.AzanAppTimeUtils.HourMinute;
+import static free.elmasry.azan.utilities.AzanAppTimeUtils.addMinutes;
 
 /**
  * Created by yahia on 12/29/17.
@@ -125,5 +127,24 @@ public class AzanAppTimeUtilsTest {
         Assert.assertEquals("01 Jan 2021", AzanAppTimeUtils.getDayAfterDateString("31 Dec 2020"));
         Assert.assertEquals("01 Jan 2020", AzanAppTimeUtils.getDayAfterDateString("31 Dec 2019"));
 
+    }
+
+    @Test
+    public void testAddMinutes() {
+        HourMinute hourMinute = addMinutes(new HourMinute(11, 15), 20);
+        Assert.assertEquals(hourMinute.hour, 11);
+        Assert.assertEquals(hourMinute.minute, 35);
+
+        hourMinute = addMinutes(new HourMinute(22, 55), 14);
+        Assert.assertEquals(hourMinute.hour, 23);
+        Assert.assertEquals(hourMinute.minute, 9);
+
+        hourMinute = addMinutes(new HourMinute(23, 50), 20);
+        Assert.assertEquals(hourMinute.hour, 23);
+        Assert.assertEquals(hourMinute.minute, 59);
+
+        hourMinute = addMinutes(new HourMinute(15, 59), 59);
+        Assert.assertEquals(hourMinute.hour, 16);
+        Assert.assertEquals(hourMinute.minute, 58);
     }
 }
