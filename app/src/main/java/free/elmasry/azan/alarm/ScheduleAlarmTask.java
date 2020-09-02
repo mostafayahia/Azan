@@ -222,23 +222,14 @@ public class ScheduleAlarmTask {
 
     private static void scheduleTaskForEqamahTime(Context context, AzanTime azanTime) {
         final int EQAMA_TIME_DIFF_IN_MIN = 20;
-        
 
-        int hourIn24 = azanTime.hourIn24Format;
-        int minute = azanTime.minute;
-
-        hourIn24 = (minute + EQAMA_TIME_DIFF_IN_MIN >= 60) ? hourIn24 + 1 : hourIn24;
-
-        // if time after eqamah exceeds 23:59, it will be set to 23:59
-        if (hourIn24 > 23) {
-            minute = 59;
-            hourIn24 = 23;
-        } else {
-            minute = (minute + EQAMA_TIME_DIFF_IN_MIN) % 60;
-        }
+        final HourMinute eqamahHourMin = addMinutes(
+                new HourMinute(azanTime.hourIn24Format, azanTime.minute),
+                EQAMA_TIME_DIFF_IN_MIN
+        );
 
         scheduleAlarmForStartingEqamahSoundActivityAt(context, azanTime.dateString,
-                hourIn24, minute);
+                eqamahHourMin.hour, eqamahHourMin.minute);
 
         // for testing
 //        final String dateString = "01 Sep 2020";
