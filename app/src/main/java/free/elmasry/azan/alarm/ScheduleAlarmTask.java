@@ -31,6 +31,8 @@ import free.elmasry.azan.utilities.PreferenceUtils;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_FAJR;
 import static free.elmasry.azan.shared.AzanTimeIndex.INDEX_ISHAA;
+import static free.elmasry.azan.utilities.AzanAppTimeUtils.HourMinute;
+import static free.elmasry.azan.utilities.AzanAppTimeUtils.addMinutes;
 
 /**
  * Created by yahia on 12/31/17.
@@ -42,6 +44,9 @@ public class ScheduleAlarmTask {
 
     public static final String ACTION_PLAY_AZAN_SOUND = "free.elmasry.azan.action.play_azan_sound";
     public static final String ACTION_PLAY_EQAMAH_SOUND = "free.elmasry.azan.action.play_eqamah_sound";
+
+    private static final int DEBUG_TEST_MIN = 53;
+    private static final int DEBUG_TEST_MIN_DELTA = 5;
 
     /**
      * Schedule alaram to start AzanSoundActivity
@@ -114,13 +119,17 @@ public class ScheduleAlarmTask {
                 nextAzanTime.hourIn24Format, nextAzanTime.minute);
 
         // for testing
-//        final int testMinute = 11;
+//        final String dateString = "1 Sep 2020";
+//        final int testMinute = DEBUG_TEST_MIN;
 //        final Calendar c = Calendar.getInstance();
-//        final int testHour = c.getTime().getHours();
+//        final int testHour = c.get(Calendar.HOUR_OF_DAY);
 //        c.set(Calendar.MINUTE, testMinute);
 //        if (c.getTimeInMillis() - System.currentTimeMillis() > 1000 * 30)
-//            ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(context, nextAzanTime.dateString, testHour, testMinute);
-
+//            ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(context, dateString, testHour, testMinute);
+//        else if (c.getTimeInMillis() - System.currentTimeMillis() > -DEBUG_TEST_MIN_DELTA * 60 * 1000) {
+//            final HourMinute testHourMin = addMinutes(new HourMinute(testHour, testMinute), DEBUG_TEST_MIN_DELTA);
+//            ScheduleAlarmTask.scheduleAlarmForStartingAzanSoundActivityAt(context, dateString, testHourMin.hour, testHourMin.minute);
+//        }
     }
 
 
@@ -213,6 +222,7 @@ public class ScheduleAlarmTask {
 
     private static void scheduleTaskForEqamahTime(Context context, AzanTime azanTime) {
         final int EQAMA_TIME_DIFF_IN_MIN = 20;
+        
 
         int hourIn24 = azanTime.hourIn24Format;
         int minute = azanTime.minute;
@@ -231,12 +241,20 @@ public class ScheduleAlarmTask {
                 hourIn24, minute);
 
         // for testing
-//        final int testMinute = 16;
+//        final String dateString = "01 Sep 2020";
+//        final int TEST_EQAMAH_DELTA = 2;
 //        final Calendar c = Calendar.getInstance();
-//        final int testHour = c.getTime().getHours();
-//        c.set(Calendar.MINUTE, testMinute);
+//        final int testHour = c.get(Calendar.HOUR_OF_DAY);
+//        // eqamah sound play after TEST_EQAMAH_DELTA minutes from azan
+//        final HourMinute testHourMin = addMinutes(new HourMinute(testHour, DEBUG_TEST_MIN), TEST_EQAMAH_DELTA);
+//        c.set(Calendar.MINUTE, testHourMin.minute);
+//        c.set(Calendar.HOUR_OF_DAY, testHourMin.hour);
 //        if (c.getTimeInMillis() - System.currentTimeMillis() > 1000 * 30)
-//            ScheduleAlarmTask.scheduleAlarmForStartingEqamahSoundActivityAt(context, nextAzanTime.dateString, testHour, testMinute);
+//            ScheduleAlarmTask.scheduleAlarmForStartingEqamahSoundActivityAt(context, dateString, testHourMin.hour, testHourMin.minute);
+//        else if (c.getTimeInMillis() - System.currentTimeMillis() > -DEBUG_TEST_MIN_DELTA * 60 * 1000) {
+//            final HourMinute testHourMin2 = addMinutes(testHourMin, DEBUG_TEST_MIN_DELTA);
+//            ScheduleAlarmTask.scheduleAlarmForStartingEqamahSoundActivityAt(context, dateString, testHourMin2.hour, testHourMin2.minute);
+//        }
     }
 
     public static void removeScheduledTaskForEqamahTime(Context context) {

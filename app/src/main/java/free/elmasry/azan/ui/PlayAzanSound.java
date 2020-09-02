@@ -46,7 +46,7 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
     private static final String LOG_TAG = PlayAzanSound.class.getSimpleName();
 
     private static final boolean DEBUG_FETCHING = false;
-    
+    private static final boolean DEBUG_SOUND = false;
 
 
 
@@ -58,6 +58,11 @@ public class PlayAzanSound extends AppCompatActivity implements MediaPlayer.OnCo
         setContentView(R.layout.activity_play_azan_sound);
 
         int indexOfCurrentAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(this);
+
+        if (DEBUG_SOUND) {
+            if (!AzanAppHelperUtils.isValidPlayAzanTimeIndex(indexOfCurrentAzanTime))
+                indexOfCurrentAzanTime = AzanTimeIndex.INDEX_DHUHR;
+        }
 
         String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(this,
                 AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()));
