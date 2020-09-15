@@ -26,6 +26,9 @@ public class NotificationData {
     private static NotificationData sInstance = null;
     private static CustomizedNotificationData sCustomizedNotificationData = null;
 
+    /**
+     * @return instance of NotificationData or null if CustomizedNotificationData not set yet (null)
+     */
     public static NotificationData getInstance() {
         if (sInstance == null) {
             sInstance = getSync();
