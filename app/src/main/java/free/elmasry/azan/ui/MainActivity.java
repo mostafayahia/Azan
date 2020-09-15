@@ -53,6 +53,7 @@ import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.AzanCalcMethodUtils;
 import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
+import free.elmasry.azan.utilities.NotificationUtil;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
@@ -151,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
-
     }
 
 
@@ -430,6 +430,12 @@ public class MainActivity extends AppCompatActivity implements
             AzanWidgetService.startActionDisplayAzanTime(this);
         }
     }
+
+    public void testLaunchNotificationButtonHandler(View view) {
+        NotificationUtil.generateNotification(this, LOG_TAG);
+    }
+
+
 
     private class FetchAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
 
