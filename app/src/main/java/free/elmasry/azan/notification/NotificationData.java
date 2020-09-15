@@ -49,11 +49,15 @@ public class NotificationData {
         return sInstance;
     }
 
-    public static void setsCustomizedNotificationData(CustomizedNotificationData cnd) {
+    public static void setCustomizedNotificationData(CustomizedNotificationData cnd) {
         sCustomizedNotificationData = cnd;
 
         // recreate sInstance to update the data inside it
         if (sInstance != null) sInstance = getSync();
+    }
+
+    public static CustomizedNotificationData getCustomizedNotificationData() {
+        return sCustomizedNotificationData;
     }
 
     private NotificationData() {
@@ -70,7 +74,7 @@ public class NotificationData {
         // The user-visible description of the channel.
         mChannelDescription = sCustomizedNotificationData.channelDescription;
         mChannelImportance = NotificationManager.IMPORTANCE_DEFAULT;
-        mChannelEnableVibrate = false;
+        mChannelEnableVibrate = true;
         mChannelLockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC;
     }
 
