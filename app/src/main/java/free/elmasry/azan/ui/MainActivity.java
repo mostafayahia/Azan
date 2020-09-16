@@ -17,6 +17,9 @@
 
 package free.elmasry.azan.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,10 +46,12 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
+import free.elmasry.azan.alarm.ScheduledReceiver;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.LocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
@@ -56,6 +61,8 @@ import free.elmasry.azan.utilities.HelperUtils;
 import free.elmasry.azan.utilities.NotificationUtil;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
+
+import static free.elmasry.azan.alarm.ScheduleAlarmTask.ACTION_PLAY_AZAN_SOUND;
 import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
@@ -435,6 +442,36 @@ public class MainActivity extends AppCompatActivity implements
         NotificationUtil.generateNotification(this, LOG_TAG);
     }
 
+    public void testScheduledReceiverButtonHandler(View view) {
+
+        Calendar calendar = Calendar.getInstance();
+
+        final int[] testMinutesVals = {5, 59};
+        final int testMinute = (Calendar.getInstance().get(Calendar.MINUTE) >= testMinutesVals[0]) ?
+            testMinutesVals[1] : testMinutesVals[0];
+
+        long timeInMillis = AzanAppTimeUtils.convertDateToMillis(mTodayDateString,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                testMinute
+        );
+
+        Intent scheduledReceiverIntent = new Intent(this, ScheduledReceiver.class);
+        scheduledReceiverIntent.setAction(ACTION_PLAY_AZAN_SOUND);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                0,
+                scheduledReceiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pendingIntent);
+        final int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(ALARM_TYPE, timeInMillis, pendingIntent);
+            HelperUtils.showToast(this, "scheduling at min: " + testMinute, Toast.LENGTH_LONG);
+        }
+    }
 
 
     private class FetchAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
