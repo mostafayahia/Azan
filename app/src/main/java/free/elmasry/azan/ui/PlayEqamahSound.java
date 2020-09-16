@@ -57,10 +57,12 @@ public class PlayEqamahSound extends AppCompatActivity implements MediaPlayer.On
         }
 
         TextView eqamahTimeLabelTextView = findViewById(R.id.eqamah_time_label_textview);
-        eqamahTimeLabelTextView.setText(AzanAppHelperUtils.getAzanLabel(this, indexOfCurrentAzanTime));
+        eqamahTimeLabelTextView.setText(this.getString(R.string.label_eqamah) + " " +
+                AzanAppHelperUtils.getAzanLabel(this, indexOfCurrentAzanTime));
 
         TextView eqamahTimeTextView = findViewById(R.id.eqamah_time_textview);
-        String azanTimeIn24HourFormat = allAzanTimesIn24Format[indexOfCurrentAzanTime];
+        String azanTimeIn24HourFormat = AzanAppTimeUtils.addMinutes(
+                allAzanTimesIn24Format[indexOfCurrentAzanTime], "20");
 
         if (PreferenceUtils.getTimeFormatFromPreferences(this)
                 .equals(getString(R.string.pref_time_format_24_hour))) {

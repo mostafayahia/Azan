@@ -76,5 +76,7 @@
     <string name="pref_time_format_12_hour" translatable="false">12-hour</string>
     <string name="pref_time_format_24_hour" translatable="false">24-hour</string>
 
+    <string name="label_eqamah">Eqamah</string>
+
 
 </resources>
