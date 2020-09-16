@@ -98,9 +98,15 @@ public class NotificationUtil {
 
         int indexOfNextAzanTime = AzanAppHelperUtils.getIndexOfCurrentTime(context) + 1;
 
-        // if indexOfNextAzanTime refers to AFTER ISHAA time (ALL_TIMES_NUM), we will set to ISHAA time
-        if (indexOfNextAzanTime >= AzanTimeIndex.ALL_TIMES_NUM)
-            indexOfNextAzanTime = AzanTimeIndex.ALL_TIMES_NUM - 1;
+        // if indexOfNextAzanTime refers to AFTER ISHAA time (ALL_TIMES_NUM), we will get
+        // Fajr azan time for TOMORROW
+        if (indexOfNextAzanTime >= AzanTimeIndex.ALL_TIMES_NUM) {
+            indexOfNextAzanTime = AzanTimeIndex.INDEX_FAJR;
+            allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context,
+                    AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()
+                            + AzanAppTimeUtils.DAY_IN_MILLIS));
+            if (allAzanTimesIn24Format == null) return null;
+        }
 
         final String azanTimeIn24HourFormat = allAzanTimesIn24Format[indexOfNextAzanTime];
 
