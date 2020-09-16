@@ -94,6 +94,34 @@ public class AzanAppTimeUtils {
     }
 
     /**
+     * use implicitly addMinutes(HourMinute hourMinute, int plusMinute)
+     * @param hourMinuteString string represents clock in 24 format like 22:10
+     * @param plusMinutesString plus minutes String to be added to a given clock, range (0-59)
+     * @return return the time after adding minutes in the form 23:10, max time is 23:59
+     */
+    public static String addMinutes(String hourMinuteString, String plusMinutesString) {
+        //remove spaces
+        hourMinuteString = hourMinuteString.replaceAll(" +", "");
+        plusMinutesString = plusMinutesString.replaceAll(" +", "");
+
+        if (!hourMinuteString.matches("^\\d{1,2}:\\d{1,2}$")) {
+            throw new IllegalArgumentException("hourMinuteString must be in 24 format like 22:10, given " + hourMinuteString);
+        }
+        if (!plusMinutesString.matches("^\\d{1,2}$")) {
+            throw new IllegalArgumentException("plusMinutesString must be number 1 or 2 digits, given " + plusMinutesString);
+        }
+
+        final int plusMinutes = Integer.parseInt(plusMinutesString);
+
+        final HourMinute hourMinute = addMinutes(
+                new HourMinute(getHourFromTime(hourMinuteString), getMinuteFromTime(hourMinuteString)),
+                plusMinutes
+        );
+
+        return getTimeWithDefaultLocale(hourMinute.hour + ":" + hourMinute.minute);
+    }
+
+    /**
      * convert time from 24-hour format to 12-hour format
      *
      * @param time24Hour time in the form like "13:00"

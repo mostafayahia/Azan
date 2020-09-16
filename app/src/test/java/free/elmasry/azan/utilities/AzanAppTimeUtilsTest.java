@@ -147,4 +147,19 @@ public class AzanAppTimeUtilsTest {
         Assert.assertEquals(hourMinute.hour, 16);
         Assert.assertEquals(hourMinute.minute, 58);
     }
+
+    @Test
+    public void testAddMinutesWithStringParams() {
+        String hourMinute = addMinutes("11 : 15", "20");
+        Assert.assertEquals(hourMinute, "11:35");
+
+        hourMinute = addMinutes(" 22:55", "14");
+        Assert.assertEquals(hourMinute, "23:09");
+
+        hourMinute = addMinutes("23:50", "20");
+        Assert.assertEquals(hourMinute, "23:59");
+
+        hourMinute = addMinutes("15:59", "59");
+        Assert.assertEquals(hourMinute, "16:58");
+    }
 }
