@@ -17,7 +17,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.TextView;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.notification.NotificationData;
@@ -91,8 +90,8 @@ public class NotificationUtil {
      * @return customized notification data (channel name, description, contentText as azan time) or
      * null if no data stored for azan for the current date
      */
-    private static CustomizedNotificationData getCustomizedNotificationData(Context context) {
-        final String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context,
+    public static CustomizedNotificationData generateCustomizedNotificationData(Context context) {
+        String[] allAzanTimesIn24Format = PreferenceUtils.getAzanTimesIn24Format(context,
                 AzanAppTimeUtils.convertMillisToDateString(System.currentTimeMillis()));
 
         if (allAzanTimesIn24Format == null) return null;
@@ -130,7 +129,7 @@ public class NotificationUtil {
         // set CustomizedNotificationData instance in NotificationData class if null
         if (null == NotificationData.getCustomizedNotificationData())
             NotificationData.setCustomizedNotificationData(
-                NotificationUtil.getCustomizedNotificationData(context));
+                NotificationUtil.generateCustomizedNotificationData(context));
 
 
         Log.d(LOG_TAG, "generateBigTextStyleNotification()");
