@@ -53,7 +53,7 @@ public class NotificationData {
         sCustomizedNotificationData = cnd;
 
         // recreate sInstance to update the data inside it
-        if (sInstance != null) sInstance = getSync();
+        if (sInstance != null) sInstance = new NotificationData();
     }
 
     public static CustomizedNotificationData getCustomizedNotificationData() {
