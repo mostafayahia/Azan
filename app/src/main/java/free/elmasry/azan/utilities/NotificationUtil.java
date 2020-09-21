@@ -246,5 +246,19 @@ public class NotificationUtil {
     public static void cancelNotification(Context context) {
         NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID);
     }
+
+    public static boolean areNotificationsEnabled(Context context) {
+        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    }
+
+    public static void openNotificationSettingsForApp(Context context) {
+        // Links to this app's notification settings.
+        Intent intent = new Intent();
+        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+        intent.putExtra("app_package", context.getPackageName());
+        intent.putExtra("app_uid", context.getApplicationInfo().uid);
+        context.startActivity(intent);
+
+    }
 }
 
