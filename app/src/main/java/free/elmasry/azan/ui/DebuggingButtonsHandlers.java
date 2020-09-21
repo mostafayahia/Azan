@@ -17,17 +17,17 @@ import free.elmasry.azan.utilities.NotificationUtil;
 import static free.elmasry.azan.alarm.ScheduleAlarmTask.ACTION_PLAY_AZAN_SOUND;
 
 class DebuggingButtonsHandlers {
-    public static void launchAzanSoundActivity(Context context) {
+    static void launchAzanSoundActivity(Context context) {
         Intent intent = new Intent(context, PlayAzanSound.class);
         context.startActivity(intent);
     }
 
-    public static void launchEqamahSoundActivity(Context context) {
+    static void launchEqamahSoundActivity(Context context) {
         Intent intent = new Intent(context, PlayEqamahSound.class);
         context.startActivity(intent);
     }
 
-    public static void scheduledReceiver(Context context) {
+    static void scheduledReceiver(Context context) {
         Calendar calendar = Calendar.getInstance();
 
         final int[] testMinutesVals = {5, 59};
@@ -58,7 +58,7 @@ class DebuggingButtonsHandlers {
         }
     }
 
-    public static void launchNotification(Context context, String LOG_TAG) {
+    static void launchNotification(Context context, String LOG_TAG) {
         NotificationUtil.generateNotification(context, LOG_TAG);
     }
 }
