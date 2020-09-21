@@ -136,7 +136,7 @@ public class NotificationUtil {
         if (null == NotificationData.getCustomizedNotificationData())
             NotificationData.setCustomizedNotificationData(
                 NotificationUtil.generateCustomizedNotificationData(context));
-        
+
 
         final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
@@ -235,6 +235,8 @@ public class NotificationUtil {
 
                 // prevent notification from being dismissed by the user
                 .setOngoing(true)
+
+                .setAutoCancel(false) // not dismissed after the user touches it
 
                 .build();
 
