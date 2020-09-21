@@ -52,6 +52,7 @@ import java.util.Locale;
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
 import free.elmasry.azan.alarm.ScheduledReceiver;
+import free.elmasry.azan.notification.NotificationData;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.LocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
@@ -512,6 +513,15 @@ public class MainActivity extends AppCompatActivity implements
 
                 // reset fetch extra data counter
                 PreferenceUtils.setFetchExtraCounter(MainActivity.this, 0);
+
+                // Notification
+                final Context context = MainActivity.this;
+                // 0. cancel the previous notification if exists
+                NotificationUtil.cancelNotification(context);
+                // 1. update notification data with the text of next azan time
+                NotificationData.setCustomizedNotificationData(NotificationUtil.generateCustomizedNotificationData(context));
+                // 2. show the new notification generated from NotificationData after updating
+                NotificationUtil.generateNotification(context, LOG_TAG);
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");
