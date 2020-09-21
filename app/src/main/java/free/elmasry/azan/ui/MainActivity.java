@@ -416,13 +416,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void testPlayAzanActivityButtonHandler(View view) {
-        Intent intent = new Intent(this, PlayAzanSound.class);
-        startActivity(intent);
+        DebuggingButtonsHandlers.launchAzanSoundActivity(this);
     }
 
     public void testPlayEqamahActivityButtonHandler(View view) {
-        Intent intent = new Intent(this, PlayEqamahSound.class);
-        startActivity(intent);
+        DebuggingButtonsHandlers.launchEqamahSoundActivity(this);
     }
 
     @Override
@@ -439,38 +437,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void testLaunchNotificationButtonHandler(View view) {
-        NotificationUtil.generateNotification(this, LOG_TAG);
+        DebuggingButtonsHandlers.launchNotification(this, LOG_TAG);
     }
 
     public void testScheduledReceiverButtonHandler(View view) {
-
-        Calendar calendar = Calendar.getInstance();
-
-        final int[] testMinutesVals = {5, 59};
-        final int testMinute = (Calendar.getInstance().get(Calendar.MINUTE) >= testMinutesVals[0]) ?
-            testMinutesVals[1] : testMinutesVals[0];
-
-        long timeInMillis = AzanAppTimeUtils.convertDateToMillis(mTodayDateString,
-                calendar.get(Calendar.HOUR_OF_DAY),
-                testMinute
-        );
-
-        Intent scheduledReceiverIntent = new Intent(this, ScheduledReceiver.class);
-        scheduledReceiverIntent.setAction(ACTION_PLAY_AZAN_SOUND);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
-                0,
-                scheduledReceiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(pendingIntent);
-        final int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(ALARM_TYPE, timeInMillis, pendingIntent);
-            HelperUtils.showToast(this, "scheduling at min: " + testMinute, Toast.LENGTH_LONG);
-        }
+        DebuggingButtonsHandlers.scheduledReceiver(this);
     }
 
 
