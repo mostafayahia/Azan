@@ -136,9 +136,7 @@ public class NotificationUtil {
         if (null == NotificationData.getCustomizedNotificationData())
             NotificationData.setCustomizedNotificationData(
                 NotificationUtil.generateCustomizedNotificationData(context));
-
-
-        Log.d(LOG_TAG, "generateBigTextStyleNotification()");
+        
 
         final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
