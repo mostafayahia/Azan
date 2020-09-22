@@ -428,6 +428,11 @@ public class MainActivity extends AppCompatActivity implements
         } else if (preferenceKey.equals(getString(R.string.pref_time_format_key))) {
             setDateAndAzanTimesViews(mTodayDateString);
             AzanWidgetService.startActionDisplayAzanTime(this);
+
+        } else if (getString(R.string.pref_eqamah_key).equals(preferenceKey)) {
+            ScheduleAlarmTask.removeScheduledTaskForEqamahTime(this);
+            ScheduleAlarmTask.scheduleTaskForNextAzanTime(this);
+            ScheduleAlarmTask.scheduleTaskForNextEqamahTime(this);
         }
     }
 

@@ -41,4 +41,18 @@
         <item>@string/pref_time_format_24_hour</item>
     </string-array>
 
+    <string-array name="eqamah_options">
+        <item>@string/pref_eqamah_label_none</item>
+        <item>@string/pref_eqamah_label_14</item>
+        <item>@string/pref_eqamah_label_21</item>
+        <item>@string/pref_eqamah_label_31</item>
+    </string-array>
+
+    <string-array name="eqamah_values">
+        <item>@string/pref_eqamah_none</item>
+        <item>@string/pref_eqamah_14</item>
+        <item>@string/pref_eqamah_21</item>
+        <item>@string/pref_eqamah_31</item>
+    </string-array>
+
 </resources>

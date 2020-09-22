@@ -25,6 +25,7 @@ import android.os.Build;
 
 import java.util.Calendar;
 
+import free.elmasry.azan.R;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.PreferenceUtils;
@@ -221,7 +222,12 @@ public class ScheduleAlarmTask {
     }
 
     private static void scheduleTaskForEqamahTime(Context context, AzanTime azanTime) {
-        final int EQAMA_TIME_DIFF_IN_MIN = 20;
+        final String eqamahPreference = PreferenceUtils.getEqamahPreferences(context);
+        if (context.getString(R.string.pref_eqamah_none).equals(eqamahPreference)) {
+            return; // nothing to do
+        }
+
+        final int EQAMA_TIME_DIFF_IN_MIN = Integer.parseInt(eqamahPreference);
 
         final HourMinute eqamahHourMin = addMinutes(
                 new HourMinute(azanTime.hourIn24Format, azanTime.minute),

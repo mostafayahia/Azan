@@ -56,13 +56,20 @@ public class PlayEqamahSound extends AppCompatActivity implements MediaPlayer.On
             throw new RuntimeException("NOT valid play azan time index: " + indexOfCurrentAzanTime);
         }
 
+        // Eqamah Preference
+        final String eqamahPreference = PreferenceUtils.getEqamahPreferences(this);
+        if (getString(R.string.pref_eqamah_none).equals(eqamahPreference)) {
+            finish();
+            return; // nothing to do
+        }
+
         TextView eqamahTimeLabelTextView = findViewById(R.id.eqamah_time_label_textview);
         eqamahTimeLabelTextView.setText(this.getString(R.string.label_eqamah) + " " +
                 AzanAppHelperUtils.getAzanLabel(this, indexOfCurrentAzanTime));
 
         TextView eqamahTimeTextView = findViewById(R.id.eqamah_time_textview);
         String azanTimeIn24HourFormat = AzanAppTimeUtils.addMinutes(
-                allAzanTimesIn24Format[indexOfCurrentAzanTime], "20");
+                allAzanTimesIn24Format[indexOfCurrentAzanTime], eqamahPreference);
 
         if (PreferenceUtils.getTimeFormatFromPreferences(this)
                 .equals(getString(R.string.pref_time_format_24_hour))) {

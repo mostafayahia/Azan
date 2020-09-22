@@ -262,4 +262,15 @@ public class PreferenceUtils {
         return sharedPreferences.getString(FETCH_EXTRA_LAST_DATE_TIME_STRING_KEY, "");
     }
 
+    /**
+     * get the user preference for Eqamah (Alert After Azan)
+     * @param context
+     * @return the value of the user preference for eqamah
+     */
+    public static String getEqamahPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.pref_eqamah_key),
+                        context.getString(R.string.pref_eqamah_default_value));
+    }
+
 }

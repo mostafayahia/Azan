@@ -78,5 +78,18 @@
 
     <string name="label_eqamah">Eqamah</string>
 
+    <!-- for Eqamah preference -->
+    <string name="pref_eqamah_label">Eqamah After Azan (minutes)</string>
+    <string name="pref_eqamah_key" translatable="false">eqamah-key</string>
+    <string name="pref_eqamah_default_value" translatable="false">14</string>
+    <string name="pref_eqamah_label_none">None</string>
+    <string name="pref_eqamah_label_14">14</string>
+    <string name="pref_eqamah_label_21">21</string>
+    <string name="pref_eqamah_label_31">31</string>
+    <string name="pref_eqamah_none" translatable="false">none</string>
+    <string name="pref_eqamah_14" translatable="false">14</string>
+    <string name="pref_eqamah_21" translatable="false">21</string>
+    <string name="pref_eqamah_31" translatable="false">31</string>
+
 
 </resources>

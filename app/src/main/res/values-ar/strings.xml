@@ -72,5 +72,12 @@
 
     <string name="label_eqamah">إقامة</string>
 
+    <!-- for Eqamah preference -->
+    <string name="pref_eqamah_label">إقامة بعد الآذان (دقيقة)</string>
+    <string name="pref_eqamah_label_none">لا يوجد</string>
+    <string name="pref_eqamah_label_14">١٤</string>
+    <string name="pref_eqamah_label_21">٢١</string>
+    <string name="pref_eqamah_label_31">٣١</string>
+
 
 </resources>

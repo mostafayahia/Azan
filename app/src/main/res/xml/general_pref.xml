@@ -22,4 +22,11 @@
         android:entries="@array/time_format_options"
         android:entryValues="@array/time_format_values" />
 
+    <ListPreference
+        android:title="@string/pref_eqamah_label"
+        android:key="@string/pref_eqamah_key"
+        android:defaultValue="@string/pref_eqamah_default_value"
+        android:entries="@array/eqamah_options"
+        android:entryValues="@array/eqamah_values" />
+
 </PreferenceScreen>
