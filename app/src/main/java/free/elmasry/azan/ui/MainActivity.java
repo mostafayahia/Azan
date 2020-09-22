@@ -17,10 +17,7 @@
 
 package free.elmasry.azan.ui;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -31,7 +28,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,12 +42,10 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
-import free.elmasry.azan.alarm.ScheduledReceiver;
 import free.elmasry.azan.notification.NotificationData;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.LocationUtils;
@@ -63,7 +57,6 @@ import free.elmasry.azan.utilities.NotificationUtil;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 
-import static free.elmasry.azan.alarm.ScheduleAlarmTask.ACTION_PLAY_AZAN_SOUND;
 import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
@@ -126,12 +119,10 @@ public class MainActivity extends AppCompatActivity implements
         mAllAzanTimesLayouts[INDEX_ISHAA] = findViewById(R.id.time_ishaa_layout);
 
 
-
         mDateTextView = findViewById(R.id.date_textview);
 
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
             throw new RuntimeException("max days offset which the app can display can't be >= the total number of days stored by this app");
-
 
 
         // setting mTodayDateString
@@ -328,7 +319,8 @@ public class MainActivity extends AppCompatActivity implements
             PreferenceUtils.setUserLocation(this, myLocation);
             new FetchAzanTimes().execute(myLocation);
         } else {
-            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
+            Dialogues.showLocationErr(this, getString(R.string.location_problem_title),
+                    getString(R.string.location_problem_message));
         }
     }
 
@@ -346,32 +338,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
         }
-    }
-
-    private void showLocationErrDialogue(String title, String message) {
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (LocationUtils.isLocationEnabled(MainActivity.this)) {
-                            // we will try to open google map app hopefully this makes the android
-                            // stores and caches the device location
-                            HelperUtils.openApp(MainActivity.this, "com.google.android.apps.maps");
-                        } else {
-                            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-                        }
-                        finish();
-                    }
-                })
-                .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
     }
 
 
