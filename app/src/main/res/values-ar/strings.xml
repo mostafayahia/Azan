@@ -73,6 +73,8 @@
     <!-- for Azan notification -->
     <string name="notification_channel_name">مذكر الآذان</string>
     <string name="notification_channel_description">إشعارات مذكر الآذان</string>
+    <string name="notification_problem_title">الإشعارات محظورة</string>
+    <string name="notification_problem_message">للحصول على تنبيهات في أوقات دقيقة للأذان، من فضلك قم بتفعيل الإشعارات لهذا التطبيق</string>
 
 
 </resources>

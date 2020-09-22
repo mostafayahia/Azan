@@ -79,6 +79,8 @@
     <!-- for Azan notification -->
     <string name="notification_channel_name">Azan Reminder</string>
     <string name="notification_channel_description">Azan Reminder Notifications</string>
+    <string name="notification_problem_title">Notification Disabled</string>
+    <string name="notification_problem_message">To get accurate alerts for Azans, Please enable notifications for this app.</string>
 
 
 </resources>

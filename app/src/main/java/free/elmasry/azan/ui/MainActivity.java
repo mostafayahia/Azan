@@ -151,6 +151,11 @@ public class MainActivity extends AppCompatActivity implements
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
+
+        if (!NotificationUtil.areNotificationsEnabled(this)) {
+            Dialogues.showNotificationDisabledErr(this, getString(R.string.notification_problem_title),
+                    getString(R.string.notification_problem_message));
+        }
     }
 
 
