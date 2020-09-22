@@ -42,3 +42,6 @@ build/
 
 # attach pid hidden files
 app/.attach_pid*
+
+# generated files for strings xml file
+/app/src/main/res/values-ar/strings_*.xml
