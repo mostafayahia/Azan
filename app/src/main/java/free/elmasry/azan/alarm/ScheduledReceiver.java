@@ -20,11 +20,14 @@ package free.elmasry.azan.alarm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
+import free.elmasry.azan.notification.NotificationData;
 import free.elmasry.azan.ui.PlayAzanSound;
 import free.elmasry.azan.ui.PlayEqamahSound;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
+import free.elmasry.azan.utilities.NotificationUtil;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
 
@@ -33,6 +36,8 @@ import free.elmasry.azan.widget.AzanWidgetService;
  */
 
 public class ScheduledReceiver extends BroadcastReceiver {
+    private static final String LOG_TAG = ScheduledReceiver.class.getSimpleName();
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -58,6 +63,15 @@ public class ScheduledReceiver extends BroadcastReceiver {
             } else {
                 AzanWidgetService.startActionDisplayAzanTime(context);
             }
+            // Notification
+            Log.d(LOG_TAG, "start updating Notification and show them");
+            // 0. cancel the previous notification
+            NotificationUtil.cancelNotification(context);
+            // 1. update notification data with the text of next azan time
+            NotificationData.setCustomizedNotificationData(NotificationUtil.generateCustomizedNotificationData(context));
+            // 2. show the new notification generated from NotificationData after updating
+            NotificationUtil.generateNotification(context, LOG_TAG);
+            Log.d(LOG_TAG, "notification is update successfully");
         }
     }
 }

@@ -17,7 +17,7 @@
 
 package free.elmasry.azan.ui;
 
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -28,7 +28,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,14 +46,17 @@ import java.util.Locale;
 
 import free.elmasry.azan.R;
 import free.elmasry.azan.alarm.ScheduleAlarmTask;
+import free.elmasry.azan.notification.NotificationData;
 import free.elmasry.azan.utilities.AzanAppHelperUtils;
 import free.elmasry.azan.utilities.LocationUtils;
 import free.elmasry.azan.utilities.AzanAppTimeUtils;
 import free.elmasry.azan.utilities.AzanCalcMethodUtils;
 import free.elmasry.azan.utilities.FetchDataUtils;
 import free.elmasry.azan.utilities.HelperUtils;
+import free.elmasry.azan.utilities.NotificationUtil;
 import free.elmasry.azan.utilities.PreferenceUtils;
 import free.elmasry.azan.widget.AzanWidgetService;
+
 import static free.elmasry.azan.utilities.LocationUtils.MyLocation;
 
 import static free.elmasry.azan.shared.AzanTimeIndex.*;
@@ -117,12 +119,10 @@ public class MainActivity extends AppCompatActivity implements
         mAllAzanTimesLayouts[INDEX_ISHAA] = findViewById(R.id.time_ishaa_layout);
 
 
-
         mDateTextView = findViewById(R.id.date_textview);
 
         if (MAX_DAYS_OFFSET_FOR_DISPLAY >= STORING_TOTAL_DAYS_NUM)
             throw new RuntimeException("max days offset which the app can display can't be >= the total number of days stored by this app");
-
 
 
         // setting mTodayDateString
@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
+        if (!NotificationUtil.areNotificationsEnabled(this)) {
+            Dialogues.showNotificationDisabledErr(this, getString(R.string.notification_problem_title),
+                    getString(R.string.notification_problem_message));
+        }
     }
 
 
@@ -320,7 +324,8 @@ public class MainActivity extends AppCompatActivity implements
             PreferenceUtils.setUserLocation(this, myLocation);
             new FetchAzanTimes().execute(myLocation);
         } else {
-            showLocationErrDialogue(getString(R.string.location_problem_title), getString(R.string.location_problem_message));
+            Dialogues.showLocationErr(this, getString(R.string.location_problem_title),
+                    getString(R.string.location_problem_message));
         }
     }
 
@@ -338,32 +343,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
         }
-    }
-
-    private void showLocationErrDialogue(String title, String message) {
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (LocationUtils.isLocationEnabled(MainActivity.this)) {
-                            // we will try to open google map app hopefully this makes the android
-                            // stores and caches the device location
-                            HelperUtils.openApp(MainActivity.this, "com.google.android.apps.maps");
-                        } else {
-                            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-                        }
-                        finish();
-                    }
-                })
-                .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
     }
 
 
@@ -409,13 +388,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void testPlayAzanActivityButtonHandler(View view) {
-        Intent intent = new Intent(this, PlayAzanSound.class);
-        startActivity(intent);
+        DebuggingButtonsHandlers.launchAzanSoundActivity(this);
     }
 
     public void testPlayEqamahActivityButtonHandler(View view) {
-        Intent intent = new Intent(this, PlayEqamahSound.class);
-        startActivity(intent);
+        DebuggingButtonsHandlers.launchEqamahSoundActivity(this);
     }
 
     @Override
@@ -435,6 +412,15 @@ public class MainActivity extends AppCompatActivity implements
             ScheduleAlarmTask.scheduleTaskForNextEqamahTime(this);
         }
     }
+
+    public void testLaunchNotificationButtonHandler(View view) {
+        DebuggingButtonsHandlers.launchNotification(this, LOG_TAG);
+    }
+
+    public void testScheduledReceiverButtonHandler(View view) {
+        DebuggingButtonsHandlers.scheduledReceiver(this);
+    }
+
 
     private class FetchAzanTimes extends AsyncTask<MyLocation, Void, String[]> {
 
@@ -503,6 +489,15 @@ public class MainActivity extends AppCompatActivity implements
 
                 // reset fetch extra data counter
                 PreferenceUtils.setFetchExtraCounter(MainActivity.this, 0);
+
+                // Notification
+                final Context context = MainActivity.this;
+                // 0. cancel the previous notification if exists
+                NotificationUtil.cancelNotification(context);
+                // 1. update notification data with the text of next azan time
+                NotificationData.setCustomizedNotificationData(NotificationUtil.generateCustomizedNotificationData(context));
+                // 2. show the new notification generated from NotificationData after updating
+                NotificationUtil.generateNotification(context, LOG_TAG);
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "can't get data from the json response");
