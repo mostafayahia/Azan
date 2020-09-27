@@ -62,6 +62,7 @@ public class ScheduledReceiver extends BroadcastReceiver {
                 context.startActivity(startPlaySoundActivityIntent);
             } else {
                 AzanWidgetService.startActionDisplayAzanTime(context);
+                ScheduleAlarmTask.scheduleTaskForNextAzanTime(context);
             }
             // Notification
             Log.d(LOG_TAG, "start updating Notification and show them");
